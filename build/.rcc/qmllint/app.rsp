@@ -1,0 +1,14 @@
+--bare
+-I
+/home/satvara/Github/USV-Dashboard/build
+-I
+/home/satvara/Github/USV-Dashboard/build/Dashboard
+-I
+/home/satvara/Github/USV-Dashboard/build
+-I
+/usr/lib/qt6/qml
+--resource
+/home/satvara/Github/USV-Dashboard/build/.qt/rcc/qmake_Dashboard.qrc
+--resource
+/home/satvara/Github/USV-Dashboard/build/.qt/rcc/app_raw_qml_0.qrc
+/home/satvara/Github/USV-Dashboard/qml/Main.qml

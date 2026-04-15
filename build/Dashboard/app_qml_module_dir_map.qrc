@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="/Dashboard">/home/satvara/Github/USV-Dashboard/build/Dashboard</file>
+
+  </qresource>
+</RCC>
