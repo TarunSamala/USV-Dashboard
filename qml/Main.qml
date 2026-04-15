@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 ApplicationWindow{
     visible: true
@@ -7,15 +8,66 @@ ApplicationWindow{
     height: 700
     title: "USV Dashboard"
 
-    Rectangle {
+    ColumnLayout {
         anchors.fill: parent
-        color: "#0f172a"
+        spacing: 6
 
-        Text{
-            anchors.centerIn: parent
-            text: "USV Dashboard"
-            color: "white"
-            font.pixelSize: 32
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 50
+            color: "#1e293b"
+
+            Text{
+                anchors.centerIn: parent
+                text: "USV Dashboard"
+                color: "white"
+                font.pixelSize: 18
+            }
         }
+
+        RowLayout{
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 6
+
+            Rectangle{
+                Layout.preferredWidth: 250
+                Layout.fillHeight: true
+                color: "#0f172a"
+
+                Text{
+                    anchors.centerIn: parent
+                    text: "Left Panel"
+                    color: "white"
+                }
+            }
+
+            Rectangle {
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                color: "#020617"
+
+                Text{
+                    anchors.centerIn: parent
+                    text: "Center Panel"
+                    color: "White"
+                }
+            }
+        }
+
+        Rectangle{
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: 120
+            color: "#1e293b"
+
+            Text {
+                anchors.centerIn: parent
+                text: "Logs / Events"
+                color: "white"
+            }
+        }
+
     }
 }

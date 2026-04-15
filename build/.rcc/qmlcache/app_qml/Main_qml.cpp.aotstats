@@ -10,15 +10,39 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 11,
+                            "line": 12,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 31,
+                            "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 15,
+                            "line": 21,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 39,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 52,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 66,
                             "message": ""
                         }
                     ],

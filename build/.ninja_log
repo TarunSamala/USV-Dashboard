@@ -67,3 +67,16 @@
 115	130	1776276299830270715	CMakeFiles/app.dir/build/.qt/rcc/qrc_app_raw_qml_0.cpp.o	9c8e633477f4aad6
 114	2312	1776276299829270709	CMakeFiles/app.dir/build/.rcc/qmlcache/app_qml/Main_qml.cpp.o	ca9ffb13000b3cf0
 2312	2572	1776276302027283818	app	9d02868407f066de
+4	12	1776277359886081818	.qt/app_qml.txt	ab84f8b374e501b5
+4	12	1776277359886081818	/home/satvara/Github/USV-Dashboard/build/.qt/app_qml.txt	ab84f8b374e501b5
+4	55	1776277359928802462	.qt/qml_imports/app_build.cmake	40c2e7f794762abb
+4	55	1776277359928802462	/home/satvara/Github/USV-Dashboard/build/.qt/qml_imports/app_build.cmake	40c2e7f794762abb
+55	60	1776277359934386747	.qt/rcc/qrc_app_raw_qml_0.cpp	bfde8bd47884fa91
+55	60	1776277359934386747	/home/satvara/Github/USV-Dashboard/build/.qt/rcc/qrc_app_raw_qml_0.cpp	bfde8bd47884fa91
+55	124	1776277359995008808	.rcc/qmlcache/app_qml/Main_qml.cpp	5a3e1e16cd2644f
+55	124	1776277359995008808	.rcc/qmlcache/app_qml/Main_qml.cpp.aotstats	5a3e1e16cd2644f
+55	124	1776277359995008808	/home/satvara/Github/USV-Dashboard/build/.rcc/qmlcache/app_qml/Main_qml.cpp	5a3e1e16cd2644f
+55	124	1776277359995008808	/home/satvara/Github/USV-Dashboard/build/.rcc/qmlcache/app_qml/Main_qml.cpp.aotstats	5a3e1e16cd2644f
+125	145	1776277359999387115	CMakeFiles/app.dir/build/.qt/rcc/qrc_app_raw_qml_0.cpp.o	9c8e633477f4aad6
+124	2523	1776277359998387110	CMakeFiles/app.dir/build/.rcc/qmlcache/app_qml/Main_qml.cpp.o	ca9ffb13000b3cf0
+2523	2826	1776277362397400710	app	9d02868407f066de
