@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="/Dashboard">C:/Users/tarun/USV-Dashboard/build/Dashboard</file>
-
-  </qresource>
-</RCC>

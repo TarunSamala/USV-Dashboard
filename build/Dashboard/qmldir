@@ -1,5 +1,0 @@
-module Dashboard
-typeinfo app.qmltypes
-prefer :/Dashboard/
-Main 1.0 qml/Main.qml
-

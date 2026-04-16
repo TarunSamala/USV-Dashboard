@@ -1,0 +1,8 @@
+build/
+build-win/
+*.exe
+*.dll
+*.zip
+*.a
+*.obj
+*.o
