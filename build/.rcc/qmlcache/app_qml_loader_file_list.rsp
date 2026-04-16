@@ -1,5 +1,5 @@
 --resource
-/home/satvara/Github/USV-Dashboard/build/.qt/rcc/qmake_Dashboard.qrc
+C:/Users/tarun/USV-Dashboard/build/.qt/rcc/qmake_Dashboard.qrc
 --resource
-/home/satvara/Github/USV-Dashboard/build/.qt/rcc/app_raw_qml_0.qrc
+C:/Users/tarun/USV-Dashboard/build/.qt/rcc/app_raw_qml_0.qrc
 /Dashboard/qml/Main.qml

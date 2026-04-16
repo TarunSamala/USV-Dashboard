@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="/Dashboard/">
-    <file alias="qml/Main.qml">/home/satvara/Github/USV-Dashboard/qml/Main.qml</file>
+    <file alias="qml/Main.qml">C:/Users/tarun/USV-Dashboard/qml/Main.qml</file>
   </qresource>
 </RCC>
 
