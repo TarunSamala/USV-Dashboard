@@ -18,6 +18,7 @@ qt_add_qml_module(app
     VERSION 1.0
     QML_FILES
         qml/Main.qml
+    NO_IMPORT_SCAN
 )
 
 target_link_libraries(app
