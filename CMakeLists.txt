@@ -11,7 +11,7 @@ qt_standard_project_setup()
 
 qt_add_executable(app
     src/main.cpp
-    src/telemetry_provider.cpp
+    src/models/power_model.cpp
 )
 
 qt_add_qml_module(app
@@ -19,6 +19,8 @@ qt_add_qml_module(app
     VERSION 1.0
     QML_FILES
         qml/Dashboard/Main.qml
+        qml/Dashboard/components/StatCard.qml
+        qml/Dashboard/panels/TopBar.qml
 )
 
 target_link_libraries(app
