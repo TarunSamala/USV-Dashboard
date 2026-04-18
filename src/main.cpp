@@ -2,6 +2,7 @@
 #include <QCoreApplication>
 #include <QQmlApplicationEngine>
 #include "models/power_model.h"
+#include "models/depth_model.h"
 #include <QQmlContext>
 
 int main(int argc, char *argv[])
@@ -18,7 +19,8 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection
     );
 
-
+    DepthModel depth_model;
+    engine.rootContext()->setContextProperty("depthModel", &depth_model);
     PowerModel powerModel;
     engine.rootContext()->setContextProperty("powerModel", &powerModel);
     engine.loadFromModule("Dashboard", "Main");

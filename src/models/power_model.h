@@ -9,6 +9,7 @@ class PowerModel : public QObject {
 
     Q_PROPERTY(double speed READ speed NOTIFY dataChanged)
     Q_PROPERTY(double battery READ battery NOTIFY dataChanged)
+    Q_PROPERTY(double speedKnots READ speedKnots NOTIFY dataChanged)  
     Q_PROPERTY(QVector<double> powerHistory READ powerHistory NOTIFY dataChanged)
 
 public:
@@ -16,6 +17,7 @@ public:
 
     double speed() const;
     double battery() const;
+    double speedKnots() const;
 
     QVector<double> powerHistory() const;
 

@@ -6,6 +6,23 @@ import Dashboard
 RowLayout {
     spacing: 10
 
+    // Depth Raw
+    StatCard {
+        Layout.fillWidth: true
+        title: "Depth Raw"
+        value: depthModel.depthRaw.toFixed(2)
+        unit: "m"
+    }
+
+    // Depth Corrected
+    StatCard {
+        Layout.fillWidth: true
+        title: "Depth Corrected"
+        value: depthModel.depthCorrected.toFixed(2)
+        unit: "m"
+    }
+
+    // Speed km/h
     StatCard {
         Layout.fillWidth: true
         title: "Speed"
@@ -13,19 +30,19 @@ RowLayout {
         unit: "km/h"
     }
 
+    // Speed knots
+    StatCard {
+        Layout.fillWidth: true
+        title: "Speed Knots"
+        value: powerModel.speedKnots.toFixed(2)
+        unit: "kn"
+    }
+
+    // Battery
     StatCard {
         Layout.fillWidth: true
         title: "Battery"
         value: powerModel.battery.toFixed(1)
         unit: "%"
-    }
-
-    StatCard {
-        Layout.fillWidth: true
-        title: "Power"
-        value: powerModel.powerHistory.length > 0
-               ? powerModel.powerHistory[powerModel.powerHistory.length-1].toFixed(1)
-               : "0"
-        unit: "W"
     }
 }
