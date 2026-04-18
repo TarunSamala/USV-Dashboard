@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QCoreApplication>
 #include <QQmlApplicationEngine>
-#include "telemetry_provider.h"
+#include "models/power_model.h"
 #include <QQmlContext>
 
 int main(int argc, char *argv[])
@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     );
 
 
-    TelemetryProvider telemetry;
-    engine.rootContext()->setContextProperty("telemetry", &telemetry);
+    PowerModel powerModel;
+    engine.rootContext()->setContextProperty("powerModel", &powerModel);
     engine.loadFromModule("Dashboard", "Main");
 
     return app.exec();

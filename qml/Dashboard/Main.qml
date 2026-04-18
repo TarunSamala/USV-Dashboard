@@ -1,23 +1,28 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Dashboard
 
-ApplicationWindow{
+ApplicationWindow {
     visible: true
     width: 1200
     height: 700
     title: "USV Dashboard"
+    color: "#020617"
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 6
+        anchors.margins: 10
+        spacing: 10
 
+        // Header
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
-            color: "#1e293b"
+            color: "#111827"
+            radius: 6
 
-            Text{
+            Text {
                 anchors.centerIn: parent
                 text: "USV Dashboard"
                 color: "white"
@@ -25,49 +30,58 @@ ApplicationWindow{
             }
         }
 
-        RowLayout{
+        // Top stats bar
+        TopBar {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 100
+        }
+
+        // Main content
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 6
+            spacing: 10
 
-            Rectangle{
+            // LEFT PANEL
+            Rectangle {
                 Layout.preferredWidth: 250
                 Layout.fillHeight: true
-                color: "#0f172a"
-
-                Text{
-                    anchors.centerIn: parent
-                    text: "Left Panel"
-                    color: "white"
-                }
+                color: "#0b1220"
+                radius: 8
+                border.color: "#1f2937"
             }
 
-            Rectangle {
-
+            // CENTER PANEL (split into top + bottom)
+            ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: "#020617"
+                spacing: 10
 
-                Text{
-                    anchors.centerIn: parent
-                    text: "Speed: " + telemetry.speed + " km/h"
-                    color: "White"
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 250
+                    color: "#020617"
+                    border.color: "#1f2937"
+                    radius: 8
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    color: "#020617"
+                    border.color: "#1f2937"
+                    radius: 8
                 }
             }
-        }
 
-        Rectangle{
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: 120
-            color: "#1e293b"
-
-            Text {
-                anchors.centerIn: parent
-                text: "Battery: " + telemetry.battery.toFixed(1) + " %"
-                color: "white"
+            // RIGHT PANEL
+            Rectangle {
+                Layout.preferredWidth: 250
+                Layout.fillHeight: true
+                color: "#0b1220"
+                radius: 8
+                border.color: "#1f2937"
             }
         }
-
     }
 }
