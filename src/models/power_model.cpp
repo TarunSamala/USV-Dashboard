@@ -5,10 +5,11 @@ PowerModel::PowerModel(QObject* parent)
     : QObject(parent)
 {
     connect(&m_timer, &QTimer::timeout, this, &PowerModel::updateData);
-    m_timer.start(500);
+    m_timer.start(1000);
 }
 
 double PowerModel::speed() const { return m_speed; }
+double PowerModel::speedKnots() const { return m_speed * 0.539957; }
 double PowerModel::battery() const { return m_battery; }
 QVector<double> PowerModel::powerHistory() const { return m_powerHistory; }
 

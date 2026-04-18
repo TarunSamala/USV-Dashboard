@@ -12,6 +12,7 @@ qt_standard_project_setup()
 qt_add_executable(app
     src/main.cpp
     src/models/power_model.cpp
+    src/models/depth_model.cpp
 )
 
 qt_add_qml_module(app
