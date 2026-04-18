@@ -50,7 +50,7 @@ ApplicationWindow{
 
                 Text{
                     anchors.centerIn: parent
-                    text: "Center Panel"
+                    text: "Speed: " + telemetry.speed + " km/h"
                     color: "White"
                 }
             }
@@ -64,7 +64,7 @@ ApplicationWindow{
 
             Text {
                 anchors.centerIn: parent
-                text: "Logs / Events"
+                text: "Battery: " + telemetry.battery.toFixed(1) + " %"
                 color: "white"
             }
         }
