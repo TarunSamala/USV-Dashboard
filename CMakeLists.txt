@@ -5,7 +5,7 @@ project(USVDashboard LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick QuickControls2 SerialPort)
 
 qt_standard_project_setup()
 
@@ -13,6 +13,7 @@ qt_add_executable(app
     src/main.cpp
     src/models/power_model.cpp
     src/models/depth_model.cpp
+    src/serial/serial_reader.cpp
 )
 
 qt_add_qml_module(app
@@ -25,5 +26,5 @@ qt_add_qml_module(app
 )
 
 target_link_libraries(app
-    PRIVATE Qt6::Core Qt6::Quick Qt6::QuickControls2
+    PRIVATE Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::SerialPort
 )

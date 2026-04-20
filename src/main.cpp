@@ -1,9 +1,12 @@
 #include <QGuiApplication>
 #include <QCoreApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QDebug>
+
 #include "models/power_model.h"
 #include "models/depth_model.h"
-#include <QQmlContext>
+#include "serial/serial_reader.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,11 +22,21 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection
     );
 
-    DepthModel depth_model;
-    engine.rootContext()->setContextProperty("depthModel", &depth_model);
+    DepthModel depthModel;
     PowerModel powerModel;
+
+    engine.rootContext()->setContextProperty("depthModel", &depthModel);
     engine.rootContext()->setContextProperty("powerModel", &powerModel);
+
     engine.loadFromModule("Dashboard", "Main");
+
+    SerialReader serial;
+    serial.start("/dev/ttyUSB0");
+
+    QObject::connect(&serial, &SerialReader::dataReceived,
+        [](const QString& data) {
+            qDebug() << "Received:" << data;
+        });
 
     return app.exec();
 }
