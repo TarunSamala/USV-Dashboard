@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     engine.loadFromModule("Dashboard", "Main");
 
     SerialReader serial;
-    serial.start("/dev/pts/2");
+    serial.start("/dev/ttyACM0");
 
     QObject::connect(&serial, &SerialReader::dataReceived,
         [](const QString& data) {
