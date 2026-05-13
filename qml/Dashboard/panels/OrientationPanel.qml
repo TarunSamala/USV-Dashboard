@@ -48,96 +48,18 @@ PanelFrame {
 
             valueColor: "#f97316"
         }
-
         SectionTitle {
             title: "COMPASS"
-        }
-
-        Rectangle {
-
-            Layout.fillWidth: true
-
-            Layout.preferredHeight: 220
-
-            color: "#020617"
-
-            border.color: "#1e293b"
-
-            radius: 6
-
-            Item {
-
-                anchors.centerIn: parent
-
-                width: 180
-                height: 180
-
-                Rectangle {
-
-                    anchors.fill: parent
-
-                    radius: width / 2
-
-                    color: "#081121"
-
-                    border.color: "#38bdf8"
-
-                    border.width: 2
                 }
 
-                Text {
+            CompassWidget {
 
-                    text: "N"
+                Layout.alignment: Qt.AlignHCenter
 
-                    color: "#ef4444"
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    anchors.top: parent.top
-
-                    anchors.topMargin: 10
-
-                    font.bold: true
-
-                    font.pixelSize: 16
+                heading: telemetry.yaw
                 }
 
-                Text {
-
-                    text: telemetry.yaw.toFixed(0) + "°"
-
-                    anchors.centerIn: parent
-
-                    color: "#e2e8f0"
-
-                    font.pixelSize: 28
-
-                    font.bold: true
-
-                    font.family: "monospace"
-                }
-
-                Rectangle {
-
-                    width: 4
-
-                    height: 70
-
-                    radius: 2
-
-                    color: "#22d3ee"
-
-                    anchors.centerIn: parent
-
-                    transform: Rotation {
-
-                        origin.x: 2
-                        origin.y: 55
-
-                        angle: telemetry.yaw
-                    }
-                }
+    
             }
         }
-    }
-}
+    

@@ -25,6 +25,7 @@ qt_add_qml_module(app
         qml/Dashboard/components/PanelFrame.qml
         qml/Dashboard/components/SectionTitle.qml
         qml/Dashboard/components/TelemetryValue.qml
+        qml/Dashboard/components/CompassWidget.qml
 
         qml/Dashboard/panels/OrientationPanel.qml
 )
