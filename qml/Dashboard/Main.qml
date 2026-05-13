@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Dashboard
 
 ApplicationWindow {
@@ -12,9 +13,9 @@ ApplicationWindow {
 
     title: "USV Dashboard"
 
-    color: "#020617"
+    color: "#111217"
 
-    RowLayout {
+    ColumnLayout {
 
         anchors.fill: parent
 
@@ -22,97 +23,252 @@ ApplicationWindow {
 
         spacing: 10
 
-        // LEFT PANEL
-        OrientationPanel {
+        //
+        // TOP CONTROL BAR
+        //
 
-            Layout.preferredWidth: 320
+        TopControlBar {
 
-            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Layout.preferredHeight: 70
         }
 
-        // CENTER PANEL
-        PanelFrame {
+        //
+        // MAIN DASHBOARD AREA
+        //
+
+        RowLayout {
 
             Layout.fillWidth: true
 
             Layout.fillHeight: true
 
+            spacing: 10
+
+            //
+            // LEFT COLUMN
+            //
+
+            OrientationPanel {
+
+                Layout.preferredWidth: 320
+
+                Layout.minimumWidth: 300
+
+                Layout.maximumWidth: 340
+
+                Layout.fillHeight: true
+            }
+
+            //
+            // CENTER COLUMN
+            //
+
             ColumnLayout {
 
-                anchors.fill: parent
+                Layout.fillWidth: true
 
-                anchors.margins: 14
+                Layout.fillHeight: true
 
-                spacing: 16
+                Layout.horizontalStretchFactor: 5
 
-                SectionTitle {
-                    title: "3D VISUALIZATION"
-                }
+                spacing: 10
 
-                Rectangle {
+                //
+                // 3D VISUALIZATION PANEL
+                //
+
+                PanelFrame {
 
                     Layout.fillWidth: true
 
                     Layout.fillHeight: true
 
-                    radius: 6
+                    Layout.verticalStretchFactor: 4
 
-                    color: "#050b16"
+                    ColumnLayout {
 
-                    border.color: "#1e293b"
+                        anchors.fill: parent
 
-                    Text {
+                        anchors.margins: 14
 
-                        anchors.centerIn: parent
+                        spacing: 12
 
-                        text: "MPU9250 / Vessel Visualization"
+                        SectionTitle {
+                            title: "3D VISUALIZATION"
+                        }
 
-                        color: "#64748b"
+                        Rectangle {
 
-                        font.pixelSize: 18
+                            Layout.fillWidth: true
 
-                        font.family: "monospace"
+                            Layout.fillHeight: true
+
+                            radius: 8
+
+                            color: "#0b0d12"
+
+                            border.color: "#1f2937"
+
+                            border.width: 1
+
+                            Text {
+
+                                anchors.centerIn: parent
+
+                                text: "MPU9250 / Vessel Visualization"
+
+                                color: "#64748b"
+
+                                font.pixelSize: 18
+
+                                font.family: "monospace"
+                            }
+                        }
                     }
                 }
 
-                SectionTitle {
-                    title: "EVENT LOG"
-                }
+                //
+                // EVENT LOGGER PANEL
+                //
 
-                Rectangle {
+                PanelFrame {
 
                     Layout.fillWidth: true
 
-                    Layout.preferredHeight: 180
+                    Layout.preferredHeight: 240
 
-                    radius: 6
+                    Layout.minimumHeight: 220
 
-                    color: "#050b16"
+                    Layout.maximumHeight: 280
 
-                    border.color: "#1e293b"
+                    Layout.verticalStretchFactor: 2
 
-                    Text {
+                    ColumnLayout {
 
-                        anchors.centerIn: parent
+                        anchors.fill: parent
 
-                        text: "Sensor logs / serial stream"
+                        anchors.margins: 14
 
-                        color: "#64748b"
+                        spacing: 10
 
-                        font.pixelSize: 16
+                        //
+                        // HEADER ROW
+                        //
 
-                        font.family: "monospace"
+                        RowLayout {
+
+                            Layout.fillWidth: true
+
+                            SectionTitle {
+                                title: "EVENT LOG"
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            Button {
+
+                                text: "CSV"
+
+                                implicitWidth: 70
+
+                                implicitHeight: 30
+                            }
+                        }
+
+                        //
+                        // LOG VIEW
+                        //
+
+                        Rectangle {
+
+                            Layout.fillWidth: true
+
+                            Layout.fillHeight: true
+
+                            radius: 6
+
+                            color: "#0b0d12"
+
+                            border.color: "#1f2937"
+
+                            border.width: 1
+
+                            ListView {
+
+                                anchors.fill: parent
+
+                                anchors.margins: 10
+
+                                model: logger.logs
+
+                                spacing: 4
+
+                                clip: true
+
+                                delegate: Text {
+
+                                    text: modelData
+
+                                    color: "#94a3b8"
+
+                                    font.pixelSize: 12
+
+                                    font.family: "monospace"
+                                }
+
+                                ScrollBar.vertical: ScrollBar { }
+                            }
+                        }
                     }
                 }
             }
+
+            //
+            // RIGHT COLUMN
+            //
+
+            ColumnLayout {
+
+                Layout.preferredWidth: 420
+
+                Layout.minimumWidth: 390
+
+                Layout.maximumWidth: 440
+
+                Layout.fillHeight: true
+
+                Layout.horizontalStretchFactor: 2
+
+                spacing: 10
+
+                //
+                // SENSOR MATRIX
+                //
+
+                SensorMatrixPanel {
+
+                    Layout.fillWidth: true
+
+                    Layout.fillHeight: true
+
+                    Layout.verticalStretchFactor: 3
+                }
+
+                WatchdogPanel {
+
+                    Layout.fillWidth: true
+
+                    Layout.preferredHeight: 320
+
+                    Layout.minimumHeight: 300
+
+                    Layout.maximumHeight: 340
+}
+            }
         }
-
-        SensorMatrixPanel {
-
-            Layout.preferredWidth: 420
-
-            Layout.fillHeight: true
-        }
-        
     }
 }

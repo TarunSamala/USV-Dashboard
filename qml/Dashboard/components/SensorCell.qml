@@ -16,9 +16,9 @@ Rectangle {
 
     radius: 8
 
-    color: "#071122"
+    color: "#191d27"
 
-    border.color: "#16324a"
+    border.color: "#2a3140"
 
     border.width: 1
 
