@@ -1,42 +1,124 @@
-#include <QGuiApplication>
-#include <QCoreApplication>
+#include <QApplication>
+
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QDebug>
 
-#include "models/power_model.h"
-#include "models/depth_model.h"
-#include "serial/serial_reader.h"
+#include <QWidget>
+#include <QVBoxLayout>
+
+#include <QTimer>
+#include <QtMath>
+
+#include "Vessel3DWidget.h"
+
+#include "models/telemetry_provider.h"
+#include "logger/event_logger.h"
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    //
+    // IMPORTANT:
+    // QApplication is required for QOpenGLWidget
+    //
+
+    QApplication app(argc, argv);
+
+    //
+    // BACKEND OBJECTS
+    //
+
+    TelemetryProvider telemetry;
+
+    EventLogger logger;
+
+    //
+    // QML ENGINE
+    //
 
     QQmlApplicationEngine engine;
 
-    QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        &app,
-        []() { QCoreApplication::exit(EXIT_FAILURE); },
-        Qt::QueuedConnection
+    engine.rootContext()->setContextProperty(
+        "telemetry",
+        &telemetry
     );
 
-    DepthModel depthModel;
-    PowerModel powerModel;
+    engine.rootContext()->setContextProperty(
+        "logger",
+        &logger
+    );
 
-    engine.rootContext()->setContextProperty("depthModel", &depthModel);
-    engine.rootContext()->setContextProperty("powerModel", &powerModel);
+    //
+    // INITIAL LOGS
+    //
+
+    logger.addLog("Dashboard initialized");
+
+    logger.addLog("Telemetry provider started");
+
+    logger.addLog("Waiting for ESP32 connection");
+
+    //
+    // LOAD DASHBOARD
+    //
 
     engine.loadFromModule("Dashboard", "Main");
 
-    SerialReader serial;
-    serial.start("/dev/pts/2");
+    if (engine.rootObjects().isEmpty())
+        return -1;
 
-    QObject::connect(&serial, &SerialReader::dataReceived,
-        [](const QString& data) {
-            qDebug() << "Received:" << data;
-        });
+    //
+    // ============================================
+    // TEST OPENGL WINDOW
+    // ============================================
+    //
+
+    QWidget *container = new QWidget;
+
+    container->setWindowTitle("Vessel 3D Viewer");
+
+    QVBoxLayout *layout = new QVBoxLayout(container);
+
+    layout->setContentsMargins(0,0,0,0);
+
+    Vessel3DWidget *vessel = new Vessel3DWidget;
+
+    layout->addWidget(vessel);
+
+    container->resize(900, 700);
+
+    container->show();
+
+    //
+    // TEST ANIMATION
+    //
+
+    QTimer *timer = new QTimer(container);
+
+    QObject::connect(
+        timer,
+        &QTimer::timeout,
+        [=]() {
+
+            static float angle = 0.0f;
+
+            angle += 1.0f;
+
+            vessel->setOrientation(
+
+                qSin(angle * 0.03f) * 20.0f,   // roll
+
+                qCos(angle * 0.02f) * 15.0f,   // pitch
+
+                angle                           // yaw
+            );
+        }
+    );
+
+    timer->start(16);
+
+    //
+    // START APP
+    //
 
     return app.exec();
 }
