@@ -22,9 +22,9 @@ PanelFrame {
             title: "IMU SENSOR MATRIX"
         }
 
-        //
+        
         // ACCELEROMETER
-        //
+        
 
         ColumnLayout {
 
@@ -76,9 +76,9 @@ PanelFrame {
             }
         }
 
-        //
+        
         // GYROSCOPE
-        //
+        
 
         ColumnLayout {
 
@@ -130,9 +130,9 @@ PanelFrame {
             }
         }
 
-        //
+        
         // MAGNETOMETER
-        //
+        
 
         ColumnLayout {
 

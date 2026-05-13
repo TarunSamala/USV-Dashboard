@@ -16,24 +16,15 @@
 
 int main(int argc, char *argv[])
 {
-    //
-    // IMPORTANT:
-    // QApplication is required for QOpenGLWidget
-    //
-
     QApplication app(argc, argv);
 
-    //
     // BACKEND OBJECTS
-    //
 
     TelemetryProvider telemetry;
 
     EventLogger logger;
 
-    //
     // QML ENGINE
-    //
 
     QQmlApplicationEngine engine;
 
@@ -47,9 +38,7 @@ int main(int argc, char *argv[])
         &logger
     );
 
-    //
     // INITIAL LOGS
-    //
 
     logger.addLog("Dashboard initialized");
 
@@ -57,20 +46,14 @@ int main(int argc, char *argv[])
 
     logger.addLog("Waiting for ESP32 connection");
 
-    //
     // LOAD DASHBOARD
-    //
 
     engine.loadFromModule("Dashboard", "Main");
 
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    //
-    // ============================================
     // TEST OPENGL WINDOW
-    // ============================================
-    //
 
     QWidget *container = new QWidget;
 
@@ -88,9 +71,8 @@ int main(int argc, char *argv[])
 
     container->show();
 
-    //
     // TEST ANIMATION
-    //
+
 
     QTimer *timer = new QTimer(container);
 
@@ -116,9 +98,9 @@ int main(int argc, char *argv[])
 
     timer->start(16);
 
-    //
+    
     // START APP
-    //
+
 
     return app.exec();
 }

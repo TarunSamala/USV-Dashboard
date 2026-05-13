@@ -23,9 +23,7 @@ ApplicationWindow {
 
         spacing: 10
 
-        //
         // TOP CONTROL BAR
-        //
 
         TopControlBar {
 
@@ -34,9 +32,7 @@ ApplicationWindow {
             Layout.preferredHeight: 70
         }
 
-        //
         // MAIN DASHBOARD AREA
-        //
 
         RowLayout {
 
@@ -46,9 +42,7 @@ ApplicationWindow {
 
             spacing: 10
 
-            //
             // LEFT COLUMN
-            //
 
             OrientationPanel {
 
@@ -61,9 +55,7 @@ ApplicationWindow {
                 Layout.fillHeight: true
             }
 
-            //
             // CENTER COLUMN
-            //
 
             ColumnLayout {
 
@@ -75,9 +67,7 @@ ApplicationWindow {
 
                 spacing: 10
 
-                //
                 // 3D VISUALIZATION PANEL
-                //
 
                 PanelFrame {
 
@@ -129,9 +119,7 @@ ApplicationWindow {
                     }
                 }
 
-                //
                 // EVENT LOGGER PANEL
-                //
 
                 PanelFrame {
 
@@ -153,9 +141,7 @@ ApplicationWindow {
 
                         spacing: 10
 
-                        //
                         // HEADER ROW
-                        //
 
                         RowLayout {
 
@@ -179,9 +165,7 @@ ApplicationWindow {
                             }
                         }
 
-                        //
                         // LOG VIEW
-                        //
 
                         Rectangle {
 
@@ -227,9 +211,7 @@ ApplicationWindow {
                 }
             }
 
-            //
             // RIGHT COLUMN
-            //
 
             ColumnLayout {
 
@@ -245,9 +227,7 @@ ApplicationWindow {
 
                 spacing: 10
 
-                //
                 // SENSOR MATRIX
-                //
 
                 SensorMatrixPanel {
 

@@ -38,9 +38,9 @@ Rectangle {
 
         spacing: 2
 
-        //
+       
         // TITLE
-        //
+       
 
         Text {
 
@@ -59,9 +59,9 @@ Rectangle {
             Layout.fillHeight: true
         }
 
-        //
+       
         // VALUE
-        //
+       
 
         Text {
 
@@ -78,9 +78,9 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        //
+       
         // UNIT
-        //
+       
 
         Text {
 

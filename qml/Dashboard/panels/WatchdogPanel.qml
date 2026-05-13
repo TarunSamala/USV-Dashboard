@@ -14,17 +14,13 @@ PanelFrame {
 
         spacing: 18
 
-        //
         // TITLE
-        //
 
         SectionTitle {
             title: "SYSTEM STATUS"
         }
 
-        //
         // HEALTH SECTION
-        //
 
         ColumnLayout {
 
@@ -55,7 +51,7 @@ PanelFrame {
 
             StatusIndicator {
                 label: "BMM350"
-                active: true
+                active: false
             }
         }
 
@@ -68,9 +64,7 @@ PanelFrame {
             color: "#16324a"
         }
 
-        //
         // CONNECTION SECTION
-        //
 
         ColumnLayout {
 
@@ -126,9 +120,7 @@ PanelFrame {
             color: "#16324a"
         }
 
-        //
         // TELEMETRY SECTION
-        //
 
         ColumnLayout {
 

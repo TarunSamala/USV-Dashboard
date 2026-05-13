@@ -138,9 +138,7 @@ PanelFrame {
             font.family: "monospace"
         }
 
-        //
         // UTC TIME
-        //
 
         Rectangle {
 
@@ -171,9 +169,7 @@ PanelFrame {
             }
         }
 
-        //
         // IST TIME
-        //
 
         Rectangle {
 
