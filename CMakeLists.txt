@@ -11,7 +11,7 @@ qt_standard_project_setup()
 
 qt_add_executable(app
     src/main.cpp
-    src/models/telemetry_model.cpp
+    src/models/telemetry_provider.cpp
     src/serial/serial_reader.cpp
 )
 
@@ -26,6 +26,12 @@ qt_add_qml_module(app
         qml/Dashboard/components/SectionTitle.qml
         qml/Dashboard/components/TelemetryValue.qml
         qml/Dashboard/components/CompassWidget.qml
+
+        qml/Dashboard/components/SensorCell.qml
+        qml/Dashboard/panels/SensorMatrixPanel.qml
+
+        qml/Dashboard/components/StatusIndicator.qml
+        qml/Dashboard/panels/WatchdogPanel.qml
 
         qml/Dashboard/panels/OrientationPanel.qml
 )

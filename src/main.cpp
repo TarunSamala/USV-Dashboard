@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "models/telemetry_model.h"
+#include "models/telemetry_provider.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    TelemetryModel telemetry;
+    TelemetryProvider telemetry;
 
     engine.rootContext()->setContextProperty(
         "telemetry",
