@@ -67,6 +67,11 @@ qt_add_executable(app
     #
 
     src/widgets/Vessel3DWidget.cpp
+
+    src/models/telemetry_parser.cpp
+
+    src/runtime/dashboard_runtime.cpp
+    
 )
 
 #
@@ -144,6 +149,8 @@ target_include_directories(app PRIVATE
     src/logger
 
     src/serial
+
+    src/runtime
 )
 
 #

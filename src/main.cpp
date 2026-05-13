@@ -12,7 +12,13 @@
 #include "widgets/Vessel3DWidget.h"
 
 #include "models/telemetry_provider.h"
+#include "models/telemetry_parser.h"
+#include "models/telemetry_packet.h"
+
+#include "runtime/dashboard_runtime.h"
+
 #include "logger/event_logger.h"
+
 #include "serial/serial_reader.h"
 
 int main(int argc, char *argv[])
@@ -29,99 +35,7 @@ int main(int argc, char *argv[])
 
     SerialReader serialReader;
 
-    //
-    // SERIAL DEBUG PIPELINE
-    //
-
-    QObject::connect(
-        &serialReader,
-        &SerialReader::lineReceived,
-        [&](const QString& line)
-        {
-            qDebug() << "LINE:" << line;
-
-            logger.addLog(line);
-        }
-    );
-
-    QObject::connect(
-        &serialReader,
-        &SerialReader::serialConnected,
-        [&]()
-        {
-            logger.addLog(
-                "ESP32 serial connected"
-            );
-        }
-    );
-
-    QObject::connect(
-        &serialReader,
-        &SerialReader::serialDisconnected,
-        [&]()
-        {
-            logger.addLog(
-                "ESP32 serial disconnected"
-            );
-        }
-    );
-
-    QObject::connect(
-        &serialReader,
-        &SerialReader::serialError,
-        [&](const QString& error)
-        {
-            logger.addLog(
-                "SERIAL ERROR: " + error
-            );
-
-            qWarning() << error;
-        }
-    );
-
-    //
-    // QML ENGINE
-    //
-
-    QQmlApplicationEngine engine;
-
-    engine.rootContext()->setContextProperty(
-        "telemetry",
-        &telemetry
-    );
-
-    engine.rootContext()->setContextProperty(
-        "logger",
-        &logger
-    );
-
-    //
-    // INITIAL LOGS
-    //
-
-    logger.addLog(
-        "Dashboard initialized"
-    );
-
-    logger.addLog(
-        "Telemetry provider started"
-    );
-
-    logger.addLog(
-        "Waiting for ESP32 telemetry stream"
-    );
-
-    //
-    // LOAD DASHBOARD
-    //
-
-    engine.loadFromModule(
-        "Dashboard",
-        "Main"
-    );
-
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    DashboardRuntime runtime;
 
     //
     // OPENGL WINDOW
@@ -153,6 +67,179 @@ int main(int argc, char *argv[])
     container->show();
 
     //
+    // SERIAL TELEMETRY PIPELINE
+    //
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::lineReceived,
+        [&](const QString& line)
+        {
+            //
+            // LOG RAW TELEMETRY
+            //
+
+            logger.addLog(line);
+
+            //
+            // DEBUG OUTPUT
+            //
+
+            qDebug() << "LINE:" << line;
+
+            //
+            // PARSE TELEMETRY
+            //
+
+            TelemetryPacket packet;
+
+            if (
+                TelemetryParser::parse(
+                    line,
+                    packet
+                )
+            )
+            {
+                //
+                // UPDATE TELEMETRY PROVIDER
+                //
+
+                telemetry.updateFromPacket(
+                    packet
+                );
+
+                //
+                // UPDATE 3D VESSEL
+                //
+
+                vessel->setOrientation(
+
+                    packet.roll,
+
+                    packet.pitch,
+
+                    packet.yaw
+                );
+            }
+
+            //
+            // FIRMWARE ACK
+            //
+
+            if (
+                line.startsWith("ACK:")
+            )
+            {
+                runtime.setFirmwareVersion(
+                    line.mid(4)
+                );
+            }
+        }
+    );
+
+    //
+    // SERIAL CONNECTED
+    //
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::serialConnected,
+        [&]()
+        {
+            runtime.setConnected(true);
+
+            logger.addLog(
+                "ESP32 serial connected"
+            );
+        }
+    );
+
+    //
+    // SERIAL DISCONNECTED
+    //
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::serialDisconnected,
+        [&]()
+        {
+            runtime.setConnected(false);
+
+            logger.addLog(
+                "ESP32 serial disconnected"
+            );
+        }
+    );
+
+    //
+    // SERIAL ERROR
+    //
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::serialError,
+        [&](const QString& error)
+        {
+            runtime.setConnected(false);
+
+            logger.addLog(
+                "SERIAL ERROR: " + error
+            );
+
+            qWarning() << error;
+        }
+    );
+
+    //
+    // QML ENGINE
+    //
+
+    QQmlApplicationEngine engine;
+
+    engine.rootContext()->setContextProperty(
+        "telemetry",
+        &telemetry
+    );
+
+    engine.rootContext()->setContextProperty(
+        "logger",
+        &logger
+    );
+
+    engine.rootContext()->setContextProperty(
+        "runtime",
+        &runtime
+    );
+
+    //
+    // INITIAL LOGS
+    //
+
+    logger.addLog(
+        "Dashboard initialized"
+    );
+
+    logger.addLog(
+        "Telemetry provider started"
+    );
+
+    logger.addLog(
+        "Waiting for ESP32 telemetry stream"
+    );
+
+    //
+    // LOAD DASHBOARD
+    //
+
+    engine.loadFromModule(
+        "Dashboard",
+        "Main"
+    );
+
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+    //
     // DELAYED SERIAL START
     //
 
@@ -161,11 +248,12 @@ int main(int argc, char *argv[])
         [&]()
         {
             logger.addLog(
-                "Opening serial port: /dev/ttyACM0"
+                "Opening serial port: "
+                + runtime.currentPort()
             );
 
             serialReader.start(
-                "/dev/ttyACM0"
+                runtime.currentPort()
             );
         }
     );
