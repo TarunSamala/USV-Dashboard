@@ -34,7 +34,7 @@ void Vessel3DWidget::initializeGL()
 
     glEnable(GL_DEPTH_TEST);
 
-    glClearColor(0.08f, 0.08f, 0.12f, 1.0f);
+    glClearColor(0.03f, 0.03f, 0.03f, 1.0f);
 }
 
 void Vessel3DWidget::resizeGL(int w, int h)

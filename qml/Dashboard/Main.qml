@@ -274,19 +274,6 @@ ApplicationWindow {
                 spacing: 10
 
                 //
-                // SENSOR MATRIX
-                //
-
-                SensorMatrixPanel {
-
-                    Layout.fillWidth: true
-
-                    Layout.fillHeight: true
-
-                    Layout.verticalStretchFactor: 3
-                }
-
-                //
                 // WATCHDOG PANEL
                 //
 
@@ -302,6 +289,21 @@ ApplicationWindow {
 
                     Layout.maximumHeight: 340
                 }
+
+                //
+                // SENSOR MATRIX
+                //
+
+                SensorMatrixPanel {
+
+                    Layout.fillWidth: true
+
+                    Layout.fillHeight: true
+
+                    Layout.verticalStretchFactor: 3
+                }
+
+                
             }
         }
     }

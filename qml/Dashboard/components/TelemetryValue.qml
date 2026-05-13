@@ -19,7 +19,7 @@ Column {
 
         color: Theme.textMuted
 
-        font.pixelSize: 10
+        font.pixelSize: 22
 
         font.letterSpacing: 3
 
@@ -36,7 +36,7 @@ Column {
 
             color: Theme.textMuted
 
-            font.pixelSize: 36
+            font.pixelSize: 44
 
             font.bold: true
 
@@ -49,7 +49,7 @@ Column {
 
             color: Theme.textMuted
 
-            font.pixelSize: 14
+            font.pixelSize: 22
 
             font.family: "monospace"
 

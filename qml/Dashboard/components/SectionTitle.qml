@@ -5,13 +5,15 @@ Text {
 
     property string title: ""
 
-    text: "// " + title
+    text: title
 
-    color: Theme.textSecondary
+    color: Theme.accentRed
 
-    font.pixelSize: 11
+    font.pixelSize: 13
 
     font.letterSpacing: 4
 
     font.family: "monospace"
+
+    font.bold: true
 }
