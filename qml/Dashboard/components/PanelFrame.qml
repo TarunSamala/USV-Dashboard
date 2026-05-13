@@ -1,13 +1,13 @@
 import QtQuick
 import QtQuick.Controls
+import Dashboard
 
 Rectangle {
 
     radius: 10
 
-    color: "#151821"
-
-    border.color: "#2a3140"
+    color: Theme.panel
+    border.color: Theme.border
 
     border.width: 1
 }

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-
+import Dashboard
 Column {
 
     property string label: ""
@@ -9,7 +9,7 @@ Column {
 
     property string unit: ""
 
-    property color valueColor: "#e2e8f0"
+    property color valueColor: Theme.textPrimary
 
     spacing: 2
 
@@ -17,7 +17,7 @@ Column {
 
         text: label
 
-        color: "#64748b"
+        color: Theme.textMuted
 
         font.pixelSize: 10
 
@@ -34,7 +34,7 @@ Column {
 
             text: value
 
-            color: valueColor
+            color: Theme.textMuted
 
             font.pixelSize: 36
 
@@ -47,7 +47,7 @@ Column {
 
             text: unit
 
-            color: "#38bdf8"
+            color: Theme.textMuted
 
             font.pixelSize: 14
 

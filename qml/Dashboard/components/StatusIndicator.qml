@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-
+import Dashboard
 RowLayout {
 
     property string label: "ESP32"
@@ -15,17 +15,17 @@ RowLayout {
         radius: 6
 
         color: active
-               ? "#22c55e"
-               : "#ef4444"
+               ? Theme.statusActive
+               : Theme.statusInactive
 
-        border.color: "#0f172a"
+        border.color: Theme.border
         border.width: 1
     }
 
     Text {
         text: label
 
-        color: "#dbeafe"
+        color: Theme.textSecondary
 
         font.pixelSize: 13
         font.letterSpacing: 1

@@ -72,6 +72,14 @@ qt_add_executable(app
 #
 # QML MODULE
 #
+set_source_files_properties(
+
+    qml/Dashboard/theme/Theme.qml
+
+    PROPERTIES
+
+        QT_QML_SINGLETON_TYPE TRUE
+)
 
 qt_add_qml_module(app
 
@@ -114,6 +122,11 @@ qt_add_qml_module(app
         qml/Dashboard/components/SensorCell.qml
 
         qml/Dashboard/components/StatusIndicator.qml
+
+        qml/Dashboard/components/AdvancedCompass.qml
+
+
+        qml/Dashboard/theme/Theme.qml
 )
 
 #

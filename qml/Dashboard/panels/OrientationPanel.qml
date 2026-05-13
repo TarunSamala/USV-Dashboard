@@ -12,6 +12,10 @@ PanelFrame {
 
         spacing: 24
 
+        //
+        // ORIENTATION
+        //
+
         SectionTitle {
             title: "ORIENTATION"
         }
@@ -24,7 +28,7 @@ PanelFrame {
 
             unit: "deg"
 
-            valueColor: "#22d3ee"
+            valueColor: "#f5f5f5"
         }
 
         TelemetryValue {
@@ -35,7 +39,7 @@ PanelFrame {
 
             unit: "deg"
 
-            valueColor: "#4ade80"
+            valueColor: "#d4d4d4"
         }
 
         TelemetryValue {
@@ -46,20 +50,22 @@ PanelFrame {
 
             unit: "deg"
 
-            valueColor: "#f97316"
+            valueColor: "#ff3b30"
         }
+
+        //
+        // COMPASS
+        //
+
         SectionTitle {
             title: "COMPASS"
-                }
-
-            CompassWidget {
-
-                Layout.alignment: Qt.AlignHCenter
-
-                heading: telemetry.yaw
-                }
-
-    
-            }
         }
-    
+
+        CompassWidget {
+
+            Layout.alignment: Qt.AlignHCenter
+
+            heading: telemetry.yaw
+        }
+    }
+}

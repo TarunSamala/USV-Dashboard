@@ -1,4 +1,5 @@
 import QtQuick
+import Dashboard
 
 Item {
 
@@ -9,20 +10,48 @@ Item {
     width: 260
     height: 260
 
+    //
+    // OUTER DIAL
+    //
+
     Rectangle {
 
         anchors.fill: parent
 
         radius: width / 2
 
-        color: "#050b16"
+        color: "#0b0b0b"
 
-        border.color: "#1e293b"
+        border.color: "#343434"
 
         border.width: 2
     }
 
-    // OUTER RING
+    //
+    // INNER DIAL
+    //
+
+    Rectangle {
+
+        anchors.centerIn: parent
+
+        width: parent.width - 18
+
+        height: parent.height - 18
+
+        radius: width / 2
+
+        color: "#111111"
+
+        border.color: "#1f1f1f"
+
+        border.width: 1
+    }
+
+    //
+    // OUTER TICK MARKS
+    //
+
     Repeater {
 
         model: 72
@@ -30,15 +59,16 @@ Item {
         Rectangle {
 
             width: index % 2 === 0 ? 2 : 1
-            height: index % 2 === 0 ? 14 : 8
 
-            color: "#94a3b8"
+            height: index % 2 === 0 ? 12 : 6
 
             radius: 1
 
-            anchors.centerIn: parent
+            color: index % 2 === 0
+                   ? "#a0a0a0"
+                   : "#5a5a5a"
 
-            y: 10
+            anchors.centerIn: parent
 
             transform: [
 
@@ -55,7 +85,10 @@ Item {
         }
     }
 
+    //
     // CARDINAL DIRECTIONS
+    //
+
     Repeater {
 
         model: [
@@ -71,10 +104,10 @@ Item {
             text: modelData.label
 
             color: modelData.label === "N"
-                   ? "#ef4444"
-                   : "#e2e8f0"
+                   ? "#dc2626"
+                   : "#f5f5f5"
 
-            font.pixelSize: 24
+            font.pixelSize: 22
 
             font.bold: true
 
@@ -85,19 +118,22 @@ Item {
             transform: [
 
                 Translate {
-                    y: -root.width * 0.34
+                    y: -root.width * 0.33
                 },
 
                 Rotation {
                     angle: modelData.angle
                     origin.x: 0
-                    origin.y: root.width * 0.34
+                    origin.y: root.width * 0.33
                 }
             ]
         }
     }
 
+    //
     // ROTATING NEEDLE
+    //
+
     Item {
 
         anchors.fill: parent
@@ -114,15 +150,19 @@ Item {
             }
         }
 
+        //
+        // NORTH NEEDLE
+        //
+
         Rectangle {
 
             width: 4
 
-            height: root.height * 0.30
+            height: root.height * 0.28
 
             radius: 2
 
-            color: "#22d3ee"
+            color: "#dc2626"
 
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -131,15 +171,19 @@ Item {
             anchors.verticalCenterOffset: -height / 2
         }
 
+        //
+        // SOUTH NEEDLE
+        //
+
         Rectangle {
 
             width: 4
 
-            height: root.height * 0.18
+            height: root.height * 0.16
 
             radius: 2
 
-            color: "#334155"
+            color: "#4a4a4a"
 
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -149,48 +193,60 @@ Item {
         }
     }
 
+    //
     // CENTER HUB
+    //
+
     Rectangle {
 
-        width: 22
-        height: 22
+        width: 20
+        height: 20
 
-        radius: 11
+        radius: 10
 
-        color: "#e2e8f0"
+        color: "#d4d4d4"
+
+        border.color: "#2a2a2a"
+
+        border.width: 1
 
         anchors.centerIn: parent
     }
 
     Rectangle {
 
-        width: 10
-        height: 10
+        width: 8
+        height: 8
 
-        radius: 5
+        radius: 4
 
-        color: "#22d3ee"
+        color: "#dc2626"
 
         anchors.centerIn: parent
     }
 
-    // DIGITAL HEADING
+    //
+    // DIGITAL HEADING DISPLAY
+    //
+
     Rectangle {
 
-        width: 120
-        height: 42
+        width: 110
+        height: 40
 
         radius: 6
 
-        color: "#020617"
+        color: "#141414"
 
-        border.color: "#1e293b"
+        border.color: "#343434"
+
+        border.width: 1
 
         anchors.horizontalCenter: parent.horizontalCenter
 
         anchors.bottom: parent.bottom
 
-        anchors.bottomMargin: 18
+        anchors.bottomMargin: 16
 
         Text {
 
@@ -198,9 +254,9 @@ Item {
 
             text: Math.round(root.heading) + "°"
 
-            color: "#e2e8f0"
+            color: "#f5f5f5"
 
-            font.pixelSize: 24
+            font.pixelSize: 22
 
             font.bold: true
 

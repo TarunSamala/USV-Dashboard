@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Dashboard
 
 Rectangle {
 
@@ -12,13 +13,13 @@ Rectangle {
 
     property string unit: "m/s²"
 
-    property color valueColor: "#22d3ee"
+    property color valueColor: Theme.textPrimary
 
     radius: 8
 
-    color: "#191d27"
+    color: Theme.panelElevated
 
-    border.color: "#2a3140"
+    border.color: Theme.border
 
     border.width: 1
 
@@ -46,7 +47,7 @@ Rectangle {
 
             text: root.title
 
-            color: "#5d7b96"
+            color: Theme.textMuted
 
             font.pixelSize: 10
 
@@ -86,7 +87,7 @@ Rectangle {
 
             text: root.unit
 
-            color: "#6b91ac"
+            color: Theme.textMuted
 
             font.pixelSize: 9
 

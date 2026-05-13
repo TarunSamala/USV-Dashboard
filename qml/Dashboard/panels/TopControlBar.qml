@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
 import Dashboard
 
 PanelFrame {
@@ -22,9 +21,9 @@ PanelFrame {
 
         Text {
 
-            text: "USV.HEADING"
+            text: "USV.Heading"
 
-            color: "#22d3ee"
+            color: Theme.textPrimary
 
             font.pixelSize: 24
 
@@ -93,6 +92,32 @@ PanelFrame {
             implicitHeight: 38
 
             implicitWidth: 110
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: parent.text
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                horizontalAlignment: Text.AlignHCenter
+
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
         //
@@ -106,6 +131,32 @@ PanelFrame {
             implicitHeight: 38
 
             implicitWidth: 120
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: parent.text
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                horizontalAlignment: Text.AlignHCenter
+
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
         //
@@ -120,9 +171,9 @@ PanelFrame {
 
             radius: 7
 
-            color: "#22c55e"
+            color: Theme.statusActive
 
-            border.color: "#0f172a"
+            border.color: Theme.border
 
             border.width: 1
         }
@@ -131,14 +182,16 @@ PanelFrame {
 
             text: "CONNECTED"
 
-            color: "#22c55e"
+            color: Theme.textSecondary
 
             font.pixelSize: 13
 
             font.family: "monospace"
         }
 
+        //
         // UTC TIME
+        //
 
         Rectangle {
 
@@ -148,9 +201,11 @@ PanelFrame {
 
             radius: 6
 
-            color: "#071122"
+            color: Theme.panelElevated
 
-            border.color: "#16324a"
+            border.color: Theme.border
+
+            border.width: 1
 
             Text {
 
@@ -161,7 +216,7 @@ PanelFrame {
                     "hh:mm:ss"
                 ) + " UTC"
 
-                color: "#dbeafe"
+                color: Theme.textPrimary
 
                 font.pixelSize: 14
 
@@ -169,7 +224,9 @@ PanelFrame {
             }
         }
 
+        //
         // IST TIME
+        //
 
         Rectangle {
 
@@ -179,9 +236,11 @@ PanelFrame {
 
             radius: 6
 
-            color: "#071122"
+            color: Theme.panelElevated
 
-            border.color: "#16324a"
+            border.color: Theme.border
+
+            border.width: 1
 
             Text {
 
@@ -194,7 +253,7 @@ PanelFrame {
                     "hh:mm:ss"
                 ) + " IST"
 
-                color: "#dbeafe"
+                color: Theme.textPrimary
 
                 font.pixelSize: 14
 

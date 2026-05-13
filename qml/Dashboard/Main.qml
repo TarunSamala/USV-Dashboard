@@ -11,9 +11,9 @@ ApplicationWindow {
     width: 1600
     height: 900
 
-    title: "USV Dashboard"
+    title: "USV.Heading"
 
-    color: "#111217"
+    color: Theme.bgPrimary
 
     ColumnLayout {
 
@@ -23,7 +23,9 @@ ApplicationWindow {
 
         spacing: 10
 
+        //
         // TOP CONTROL BAR
+        //
 
         TopControlBar {
 
@@ -32,7 +34,9 @@ ApplicationWindow {
             Layout.preferredHeight: 70
         }
 
+        //
         // MAIN DASHBOARD AREA
+        //
 
         RowLayout {
 
@@ -42,7 +46,9 @@ ApplicationWindow {
 
             spacing: 10
 
+            //
             // LEFT COLUMN
+            //
 
             OrientationPanel {
 
@@ -55,7 +61,9 @@ ApplicationWindow {
                 Layout.fillHeight: true
             }
 
+            //
             // CENTER COLUMN
+            //
 
             ColumnLayout {
 
@@ -67,7 +75,9 @@ ApplicationWindow {
 
                 spacing: 10
 
+                //
                 // 3D VISUALIZATION PANEL
+                //
 
                 PanelFrame {
 
@@ -97,9 +107,9 @@ ApplicationWindow {
 
                             radius: 8
 
-                            color: "#0b0d12"
+                            color: Theme.panelElevated
 
-                            border.color: "#1f2937"
+                            border.color: Theme.border
 
                             border.width: 1
 
@@ -107,9 +117,9 @@ ApplicationWindow {
 
                                 anchors.centerIn: parent
 
-                                text: "MPU9250 / Vessel Visualization"
+                                text: "VESSEL VISUALIZATION"
 
-                                color: "#64748b"
+                                color: Theme.textMuted
 
                                 font.pixelSize: 18
 
@@ -119,11 +129,15 @@ ApplicationWindow {
                     }
                 }
 
+                //
                 // EVENT LOGGER PANEL
+                //
 
                 PanelFrame {
 
                     Layout.fillWidth: true
+
+                    Layout.fillHeight: true
 
                     Layout.preferredHeight: 240
 
@@ -141,7 +155,9 @@ ApplicationWindow {
 
                         spacing: 10
 
+                        //
                         // HEADER ROW
+                        //
 
                         RowLayout {
 
@@ -162,10 +178,38 @@ ApplicationWindow {
                                 implicitWidth: 70
 
                                 implicitHeight: 30
+
+                                background: Rectangle {
+
+                                    radius: 6
+
+                                    color: Theme.panelElevated
+
+                                    border.color: Theme.border
+
+                                    border.width: 1
+                                }
+
+                                contentItem: Text {
+
+                                    text: parent.text
+
+                                    color: Theme.textPrimary
+
+                                    font.pixelSize: 11
+
+                                    font.family: "monospace"
+
+                                    horizontalAlignment: Text.AlignHCenter
+
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                             }
                         }
 
+                        //
                         // LOG VIEW
+                        //
 
                         Rectangle {
 
@@ -175,9 +219,9 @@ ApplicationWindow {
 
                             radius: 6
 
-                            color: "#0b0d12"
+                            color: Theme.panelElevated
 
-                            border.color: "#1f2937"
+                            border.color: Theme.border
 
                             border.width: 1
 
@@ -197,7 +241,7 @@ ApplicationWindow {
 
                                     text: modelData
 
-                                    color: "#94a3b8"
+                                    color: Theme.textSecondary
 
                                     font.pixelSize: 12
 
@@ -211,7 +255,9 @@ ApplicationWindow {
                 }
             }
 
+            //
             // RIGHT COLUMN
+            //
 
             ColumnLayout {
 
@@ -227,7 +273,9 @@ ApplicationWindow {
 
                 spacing: 10
 
+                //
                 // SENSOR MATRIX
+                //
 
                 SensorMatrixPanel {
 
@@ -238,16 +286,22 @@ ApplicationWindow {
                     Layout.verticalStretchFactor: 3
                 }
 
+                //
+                // WATCHDOG PANEL
+                //
+
                 WatchdogPanel {
 
                     Layout.fillWidth: true
+
+                    Layout.fillHeight: true
 
                     Layout.preferredHeight: 320
 
                     Layout.minimumHeight: 300
 
                     Layout.maximumHeight: 340
-}
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 import Dashboard
 
+
 PanelFrame {
 
     ColumnLayout {
@@ -17,7 +18,7 @@ PanelFrame {
         // TITLE
 
         SectionTitle {
-            title: "SYSTEM STATUS"
+            title: "IMU NAVIGATION MODULE"
         }
 
         // HEALTH SECTION
@@ -32,7 +33,7 @@ PanelFrame {
 
                 text: "HEALTH"
 
-                color: "#64748b"
+                color: Theme.textMuted
 
                 font.pixelSize: 11
 
@@ -61,7 +62,7 @@ PanelFrame {
 
             height: 1
 
-            color: "#16324a"
+            color: Theme.border
         }
 
         // CONNECTION SECTION
@@ -76,7 +77,7 @@ PanelFrame {
 
                 text: "CONNECTION"
 
-                color: "#64748b"
+                color: Theme.textMuted
 
                 font.pixelSize: 11
 
@@ -92,7 +93,7 @@ PanelFrame {
 
                 text: "PORT : /dev/ttyACM0"
 
-                color: "#67e8f9"
+                color: Theme.textPrimary
 
                 font.pixelSize: 13
 
@@ -103,7 +104,7 @@ PanelFrame {
 
                 text: "BAUD : 115200"
 
-                color: "#67e8f9"
+                color: Theme.textPrimary
 
                 font.pixelSize: 13
 
@@ -117,7 +118,7 @@ PanelFrame {
 
             height: 1
 
-            color: "#16324a"
+            color: Theme.border
         }
 
         // TELEMETRY SECTION
@@ -132,7 +133,7 @@ PanelFrame {
 
                 text: "TELEMETRY"
 
-                color: "#64748b"
+                color: Theme.textMuted
 
                 font.pixelSize: 11
 
@@ -143,7 +144,7 @@ PanelFrame {
 
                 text: "PACKET RATE : 92 Hz"
 
-                color: "#67e8f9"
+                color: Theme.textPrimary
 
                 font.pixelSize: 13
 
@@ -165,7 +166,7 @@ PanelFrame {
 
                 text: "UPTIME : 01:14:22"
 
-                color: "#94a3b8"
+                color: Theme.textSecondary
 
                 font.pixelSize: 13
 
@@ -176,7 +177,7 @@ PanelFrame {
 
                 text: "STATUS : HEALTHY"
 
-                color: "#22c55e"
+                color: Theme.textPrimary
 
                 font.pixelSize: 14
 

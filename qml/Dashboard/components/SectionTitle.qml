@@ -1,4 +1,5 @@
 import QtQuick
+import Dashboard
 
 Text {
 
@@ -6,7 +7,7 @@ Text {
 
     text: "// " + title
 
-    color: "#38bdf8"
+    color: Theme.textSecondary
 
     font.pixelSize: 11
 
