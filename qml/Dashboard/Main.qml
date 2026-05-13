@@ -4,84 +4,43 @@ import QtQuick.Layouts
 import Dashboard
 
 ApplicationWindow {
+
     visible: true
-    width: 1200
-    height: 700
-    title: "USV Dashboard"
+
+    width: 1400
+    height: 800
+
+    title: "USV Heading"
+
     color: "#020617"
 
-    ColumnLayout {
+    RowLayout {
+
         anchors.fill: parent
+
         anchors.margins: 10
+
         spacing: 10
 
-        // Header
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 50
-            color: "#111827"
-            radius: 6
+        OrientationPanel {
 
-            Text {
-                anchors.centerIn: parent
-                text: "USV Dashboard"
-                color: "white"
-                font.pixelSize: 18
-            }
-        }
+            Layout.preferredWidth: 320
 
-        // Top stats bar
-        TopBar {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 100
-        }
-
-        // Main content
-        RowLayout {
-            Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 10
+        }
 
-            // LEFT PANEL
-            Rectangle {
-                Layout.preferredWidth: 250
-                Layout.fillHeight: true
-                color: "#0b1220"
-                radius: 8
-                border.color: "#1f2937"
-            }
+        PanelFrame {
 
-            // CENTER PANEL (split into top + bottom)
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: 10
+            Layout.fillWidth: true
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 250
-                    color: "#020617"
-                    border.color: "#1f2937"
-                    radius: 8
-                }
+            Layout.fillHeight: true
+        }
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    color: "#020617"
-                    border.color: "#1f2937"
-                    radius: 8
-                }
-            }
+        PanelFrame {
 
-            // RIGHT PANEL
-            Rectangle {
-                Layout.preferredWidth: 250
-                Layout.fillHeight: true
-                color: "#0b1220"
-                radius: 8
-                border.color: "#1f2937"
-            }
+            Layout.preferredWidth: 320
+
+            Layout.fillHeight: true
         }
     }
 }

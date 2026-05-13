@@ -11,18 +11,22 @@ qt_standard_project_setup()
 
 qt_add_executable(app
     src/main.cpp
-    src/models/power_model.cpp
-    src/models/depth_model.cpp
+    src/models/telemetry_model.cpp
     src/serial/serial_reader.cpp
 )
 
 qt_add_qml_module(app
     URI Dashboard
     VERSION 1.0
+
     QML_FILES
         qml/Dashboard/Main.qml
-        qml/Dashboard/components/StatCard.qml
-        qml/Dashboard/panels/TopBar.qml
+
+        qml/Dashboard/components/PanelFrame.qml
+        qml/Dashboard/components/SectionTitle.qml
+        qml/Dashboard/components/TelemetryValue.qml
+
+        qml/Dashboard/panels/OrientationPanel.qml
 )
 
 target_link_libraries(app
