@@ -6,25 +6,82 @@
 #include <QWidget>
 #include <QVBoxLayout>
 
+#include <QDebug>
 #include <QTimer>
-#include <QtMath>
 
-#include "Vessel3DWidget.h"
+#include "widgets/Vessel3DWidget.h"
 
 #include "models/telemetry_provider.h"
 #include "logger/event_logger.h"
+#include "serial/serial_reader.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    //
     // BACKEND OBJECTS
+    //
 
     TelemetryProvider telemetry;
 
     EventLogger logger;
 
+    SerialReader serialReader;
+
+    //
+    // SERIAL DEBUG PIPELINE
+    //
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::lineReceived,
+        [&](const QString& line)
+        {
+            qDebug() << "LINE:" << line;
+
+            logger.addLog(line);
+        }
+    );
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::serialConnected,
+        [&]()
+        {
+            logger.addLog(
+                "ESP32 serial connected"
+            );
+        }
+    );
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::serialDisconnected,
+        [&]()
+        {
+            logger.addLog(
+                "ESP32 serial disconnected"
+            );
+        }
+    );
+
+    QObject::connect(
+        &serialReader,
+        &SerialReader::serialError,
+        [&](const QString& error)
+        {
+            logger.addLog(
+                "SERIAL ERROR: " + error
+            );
+
+            qWarning() << error;
+        }
+    );
+
+    //
     // QML ENGINE
+    //
 
     QQmlApplicationEngine engine;
 
@@ -38,32 +95,56 @@ int main(int argc, char *argv[])
         &logger
     );
 
+    //
     // INITIAL LOGS
+    //
 
-    logger.addLog("Dashboard initialized");
+    logger.addLog(
+        "Dashboard initialized"
+    );
 
-    logger.addLog("Telemetry provider started");
+    logger.addLog(
+        "Telemetry provider started"
+    );
 
-    logger.addLog("Waiting for ESP32 connection");
+    logger.addLog(
+        "Waiting for ESP32 telemetry stream"
+    );
 
+    //
     // LOAD DASHBOARD
+    //
 
-    engine.loadFromModule("Dashboard", "Main");
+    engine.loadFromModule(
+        "Dashboard",
+        "Main"
+    );
 
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    // TEST OPENGL WINDOW
+    //
+    // OPENGL WINDOW
+    //
 
     QWidget *container = new QWidget;
 
-    container->setWindowTitle("Vessel 3D Viewer");
+    container->setWindowTitle(
+        "Vessel 3D Viewer"
+    );
 
-    QVBoxLayout *layout = new QVBoxLayout(container);
+    QVBoxLayout *layout =
+        new QVBoxLayout(container);
 
-    layout->setContentsMargins(0,0,0,0);
+    layout->setContentsMargins(
+        0,
+        0,
+        0,
+        0
+    );
 
-    Vessel3DWidget *vessel = new Vessel3DWidget;
+    Vessel3DWidget *vessel =
+        new Vessel3DWidget;
 
     layout->addWidget(vessel);
 
@@ -71,36 +152,27 @@ int main(int argc, char *argv[])
 
     container->show();
 
-    // TEST ANIMATION
+    //
+    // DELAYED SERIAL START
+    //
 
+    QTimer::singleShot(
+        2000,
+        [&]()
+        {
+            logger.addLog(
+                "Opening serial port: /dev/ttyACM0"
+            );
 
-    QTimer *timer = new QTimer(container);
-
-    QObject::connect(
-        timer,
-        &QTimer::timeout,
-        [=]() {
-
-            static float angle = 0.0f;
-
-            angle += 1.0f;
-
-            vessel->setOrientation(
-
-                qSin(angle * 0.03f) * 20.0f,   // roll
-
-                qCos(angle * 0.02f) * 15.0f,   // pitch
-
-                angle                           // yaw
+            serialReader.start(
+                "/dev/ttyACM0"
             );
         }
     );
 
-    timer->start(16);
-
-    
-    // START APP
-
+    //
+    // START APPLICATION
+    //
 
     return app.exec();
 }
