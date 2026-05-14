@@ -6,13 +6,11 @@
 
 #include <QSerialPortInfo>
 
+#include <QTimer>
+
 class DashboardRuntime : public QObject
 {
     Q_OBJECT
-
-    //
-    // CONNECTION STATE
-    //
 
     Q_PROPERTY(
         bool connected
@@ -25,10 +23,6 @@ class DashboardRuntime : public QObject
         READ connectionStatus
         NOTIFY stateChanged
     )
-
-    //
-    // SERIAL PORTS
-    //
 
     Q_PROPERTY(
         QStringList availablePorts
@@ -43,10 +37,6 @@ class DashboardRuntime : public QObject
         NOTIFY currentPortChanged
     )
 
-    //
-    // FIRMWARE INFO
-    //
-
     Q_PROPERTY(
         QString firmwareVersion
         READ firmwareVersion
@@ -59,10 +49,6 @@ public:
         QObject* parent = nullptr
     );
 
-    //
-    // DASHBOARD STATES
-    //
-
     enum class State
     {
         DISCONNECTED,
@@ -71,41 +57,41 @@ public:
         ERROR
     };
 
-    Q_ENUM(State)
-
     //
-    // READERS
+    // Runtime state
     //
 
     bool connected() const;
 
     QString connectionStatus() const;
 
+    //
+    // Serial ports
+    //
+
     QStringList availablePorts() const;
 
     QString currentPort() const;
-
-    QString firmwareVersion() const;
-
-    //
-    // WRITERS
-    //
 
     void setCurrentPort(
         const QString& port
     );
 
-    //
-    // ACTIONS
-    //
-
     Q_INVOKABLE void refreshPorts();
 
-    Q_INVOKABLE void setConnected(
-        bool value
-    );
+    //
+    // Firmware
+    //
 
-    Q_INVOKABLE void setFirmwareVersion(
+    QString firmwareVersion() const;
+
+    //
+    // Runtime updates
+    //
+
+    void setConnected(bool value);
+
+    void setFirmwareVersion(
         const QString& version
     );
 
@@ -124,14 +110,14 @@ signals:
 private:
 
     //
-    // RUNTIME STATE
+    // Runtime state
     //
 
     State m_state =
         State::DISCONNECTED;
 
     //
-    // SERIAL
+    // Serial ports
     //
 
     QStringList m_availablePorts;
@@ -139,9 +125,15 @@ private:
     QString m_currentPort;
 
     //
-    // FIRMWARE
+    // Firmware
     //
 
     QString m_firmwareVersion =
-        "UNKNOWN";
+        "FW: UNKNOWN";
+
+    //
+    // Periodic port scanner
+    //
+
+    QTimer m_portScanTimer;
 };

@@ -17,6 +17,12 @@ public:
 
     void sendLine(const QString& line);
 
+    Q_INVOKABLE void connectPort(
+        const QString& portName
+    );
+
+    Q_INVOKABLE void disconnectPort();
+
 signals:
 
     //

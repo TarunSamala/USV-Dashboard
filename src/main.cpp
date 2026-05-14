@@ -210,6 +210,10 @@ int main(int argc, char *argv[])
         "runtime",
         &runtime
     );
+    engine.rootContext()->setContextProperty(
+        "serialReader",
+        &serialReader
+    );
 
     //
     // INITIAL LOGS
@@ -243,20 +247,6 @@ int main(int argc, char *argv[])
     // DELAYED SERIAL START
     //
 
-    QTimer::singleShot(
-        2000,
-        [&]()
-        {
-            logger.addLog(
-                "Opening serial port: "
-                + runtime.currentPort()
-            );
-
-            serialReader.start(
-                runtime.currentPort()
-            );
-        }
-    );
 
     //
     // START APPLICATION

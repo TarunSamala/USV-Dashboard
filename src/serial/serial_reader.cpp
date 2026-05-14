@@ -30,14 +30,35 @@ SerialReader::SerialReader(QObject* parent)
     );
 }
 
-void SerialReader::start(const QString& portName)
+void SerialReader::start(
+    const QString& portName
+)
 {
+    //
+    // Safety check
+    //
+
+    if (portName.isEmpty())
+    {
+        emit serialError(
+            "No serial port selected"
+        );
+
+        return;
+    }
+
     //
     // Close existing connection
     //
 
     if (m_serial.isOpen())
         m_serial.close();
+
+    //
+    // Clear old buffered data
+    //
+
+    m_buffer.clear();
 
     //
     // Configure serial
@@ -66,12 +87,6 @@ void SerialReader::start(const QString& portName)
     );
 
     //
-    // Prevent ESP32 auto-reset issues
-    //
-
-    
-
-    //
     // Open serial
     //
 
@@ -85,24 +100,16 @@ void SerialReader::start(const QString& portName)
         return;
     }
 
-    //
-    // Prevent ESP32 auto-reset issues
-    //
-
-    m_serial.setDataTerminalReady(false);
-
-    m_serial.setRequestToSend(false);
-
     qDebug() << "Serial connected:"
              << portName;
 
     emit serialConnected();
 
     //
-    // Allow ESP32-S3 USB CDC to stabilize
+    // Allow ESP32 USB CDC to stabilize
     //
 
-    QThread::msleep(1500);
+    QThread::msleep(1200);
 
     //
     // Dashboard handshake
@@ -120,14 +127,43 @@ void SerialReader::stop()
     if (!m_serial.isOpen())
         return;
 
+    //
+    // Close serial
+    //
+
     m_serial.close();
+
+    //
+    // Clear packet buffer
+    //
+
+    m_buffer.clear();
 
     qDebug() << "Serial disconnected";
 
     emit serialDisconnected();
 }
 
-void SerialReader::sendLine(const QString& line)
+void SerialReader::connectPort(
+    const QString& portName
+)
+{
+    qDebug() << "Connecting to:"
+             << portName;
+
+    start(portName);
+}
+
+void SerialReader::disconnectPort()
+{
+    qDebug() << "Disconnect requested";
+
+    stop();
+}
+
+void SerialReader::sendLine(
+    const QString& line
+)
 {
     if (!m_serial.isOpen())
         return;

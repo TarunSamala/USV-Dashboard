@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Dashboard
 
 PanelFrame {
@@ -46,18 +47,111 @@ PanelFrame {
 
             id: portBox
 
-            model: [
-                "/dev/ttyACM0",
-                "/dev/ttyUSB0",
-                "COM3",
-                "COM4"
-            ]
+            model: runtime.availablePorts
 
-            implicitWidth: 180
+            currentIndex:
+                runtime.availablePorts.indexOf(
+                    runtime.currentPort
+                )
+
+            onActivated: {
+
+                runtime.currentPort =
+                    currentText
+            }
+
+            implicitWidth: 220
 
             font.pixelSize: 13
 
             editable: false
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: portBox.displayText
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                verticalAlignment: Text.AlignVCenter
+
+                leftPadding: 10
+            }
+
+            delegate: ItemDelegate {
+
+                width: portBox.width
+
+                contentItem: Text {
+
+                    text: modelData
+
+                    color: Theme.textPrimary
+
+                    font.pixelSize: 12
+
+                    font.family: "monospace"
+
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                background: Rectangle {
+
+                    color: hovered
+                           ? "#252525"
+                           : Theme.panelElevated
+                }
+            }
+
+            popup: Popup {
+
+                y: portBox.height + 4
+
+                width: portBox.width
+
+                implicitHeight: contentItem.implicitHeight
+
+                padding: 2
+
+                background: Rectangle {
+
+                    radius: 6
+
+                    color: Theme.panelElevated
+
+                    border.color: Theme.border
+
+                    border.width: 1
+                }
+
+                contentItem: ListView {
+
+                    clip: true
+
+                    implicitHeight: contentHeight
+
+                    model: portBox.popup.visible
+                           ? portBox.delegateModel
+                           : null
+
+                    currentIndex:
+                        portBox.highlightedIndex
+                }
+            }
         }
 
         //
@@ -79,6 +173,32 @@ PanelFrame {
             implicitWidth: 120
 
             font.pixelSize: 13
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: baudBox.displayText
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                verticalAlignment: Text.AlignVCenter
+
+                leftPadding: 10
+            }
         }
 
         //
@@ -92,6 +212,11 @@ PanelFrame {
             implicitHeight: 38
 
             implicitWidth: 110
+
+            onClicked: {
+
+                runtime.refreshPorts()
+            }
 
             background: Rectangle {
 
@@ -126,19 +251,68 @@ PanelFrame {
 
         Button {
 
-            text: "CONNECT"
+            text: runtime.connected
+                  ? "DISCONNECT"
+                  : "CONNECT"
 
             implicitHeight: 38
 
             implicitWidth: 120
 
+            onClicked: {
+
+                //
+                // DISCONNECT
+                //
+
+                if (runtime.connected)
+                {
+                    serialReader.disconnectPort()
+                }
+
+                //
+                // CONNECT
+                //
+
+                else
+                {
+                    //
+                    // Safety check
+                    //
+
+                    if (
+                        runtime.currentPort === ""
+                    )
+                    {
+                        console.log(
+                            "No serial port selected"
+                        )
+
+                        return
+                    }
+
+                    console.log(
+                        "Connecting to:",
+                        runtime.currentPort
+                    )
+
+                    serialReader.connectPort(
+                        runtime.currentPort
+                    )
+                }
+            }
+
             background: Rectangle {
 
                 radius: 6
 
-                color: Theme.panelElevated
+                color: runtime.connected
+                       ? "#220909"
+                       : Theme.panelElevated
 
-                border.color: Theme.border
+                border.color: runtime.connected
+                              ? "#cc0000"
+                              : Theme.border
 
                 border.width: 1
             }
@@ -147,7 +321,9 @@ PanelFrame {
 
                 text: parent.text
 
-                color: Theme.textPrimary
+                color: runtime.connected
+                       ? "#ff5555"
+                       : Theme.textPrimary
 
                 font.pixelSize: 12
 
@@ -171,7 +347,9 @@ PanelFrame {
 
             radius: 7
 
-            color: Theme.statusActive
+            color: runtime.connected
+                   ? Theme.statusActive
+                   : Theme.statusInactive
 
             border.color: Theme.border
 
@@ -180,13 +358,45 @@ PanelFrame {
 
         Text {
 
-            text: "CONNECTED"
+            text: runtime.connectionStatus
 
             color: Theme.textSecondary
 
             font.pixelSize: 13
 
             font.family: "monospace"
+        }
+
+        //
+        // FIRMWARE VERSION
+        //
+
+        Rectangle {
+
+            implicitWidth: 180
+
+            implicitHeight: 42
+
+            radius: 6
+
+            color: Theme.panelElevated
+
+            border.color: Theme.border
+
+            border.width: 1
+
+            Text {
+
+                anchors.centerIn: parent
+
+                text: runtime.firmwareVersion
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 13
+
+                font.family: "monospace"
+            }
         }
 
         //
