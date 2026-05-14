@@ -3,9 +3,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include <QWidget>
-#include <QVBoxLayout>
-
 #include <QDebug>
 #include <QTimer>
 
@@ -15,9 +12,10 @@
 #include "models/telemetry_parser.h"
 #include "models/telemetry_packet.h"
 
-#include "runtime/dashboard_runtime.h"
-
 #include "logger/event_logger.h"
+#include "logger/csv_logger.h"
+
+#include "runtime/dashboard_runtime.h"
 
 #include "serial/serial_reader.h"
 
@@ -33,6 +31,8 @@ int main(int argc, char *argv[])
 
     EventLogger logger;
 
+    CsvLogger csvLogger;
+
     SerialReader serialReader;
 
     DashboardRuntime runtime;
@@ -41,30 +41,12 @@ int main(int argc, char *argv[])
     // OPENGL WINDOW
     //
 
-    QWidget *container = new QWidget;
+    Vessel3DWidget* vessel =
+        new Vessel3DWidget();
 
-    container->setWindowTitle(
-        "Vessel 3D Viewer"
-    );
+    vessel->resize(900, 700);
 
-    QVBoxLayout *layout =
-        new QVBoxLayout(container);
-
-    layout->setContentsMargins(
-        0,
-        0,
-        0,
-        0
-    );
-
-    Vessel3DWidget *vessel =
-        new Vessel3DWidget;
-
-    layout->addWidget(vessel);
-
-    container->resize(900, 700);
-
-    container->show();
+    vessel->show();
 
     //
     // SERIAL TELEMETRY PIPELINE
@@ -105,6 +87,14 @@ int main(int argc, char *argv[])
                 //
 
                 telemetry.updateFromPacket(
+                    packet
+                );
+
+                //
+                // LOG CSV PACKET
+                //
+
+                csvLogger.logPacket(
                     packet
                 );
 
@@ -210,9 +200,15 @@ int main(int argc, char *argv[])
         "runtime",
         &runtime
     );
+
     engine.rootContext()->setContextProperty(
         "serialReader",
         &serialReader
+    );
+
+    engine.rootContext()->setContextProperty(
+        "csvLogger",
+        &csvLogger
     );
 
     //
@@ -221,6 +217,10 @@ int main(int argc, char *argv[])
 
     logger.addLog(
         "Dashboard initialized"
+    );
+
+    logger.addLog(
+        "CSV logging started"
     );
 
     logger.addLog(
@@ -244,9 +244,24 @@ int main(int argc, char *argv[])
         return -1;
 
     //
-    // DELAYED SERIAL START
+    // CLEAN EXIT
     //
 
+    QObject::connect(
+        &app,
+        &QApplication::aboutToQuit,
+        [&]()
+        {
+            csvLogger.stopLogging();
+
+            serialReader.stop();
+
+            logger.addLog(
+                "Dashboard shutdown"
+            );
+        }
+    );
+  
 
     //
     // START APPLICATION

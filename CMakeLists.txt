@@ -59,8 +59,8 @@ qt_add_executable(app
     #
     # LOGGER
     #
-
     src/logger/event_logger.cpp
+    src/logger/csv_logger.cpp
 
     #
     # OPENGL / 3D

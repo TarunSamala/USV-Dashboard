@@ -12,7 +12,9 @@ QStringList EventLogger::logs() const
     return m_logs;
 }
 
-void EventLogger::addLog(const QString& message)
+void EventLogger::addLog(
+    const QString& message
+)
 {
     QString timestamp =
         QDateTime::currentDateTime()

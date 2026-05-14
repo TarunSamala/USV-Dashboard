@@ -205,6 +205,63 @@ ApplicationWindow {
                                     verticalAlignment: Text.AlignVCenter
                                 }
                             }
+                            
+                            Button {
+
+                                text: csvLogger.logging
+                                    ? "STOP"
+                                    : "REC"
+
+                                implicitWidth: 90
+
+                                implicitHeight: 32
+
+                                onClicked: {
+
+                                    if (csvLogger.logging)
+                                    {
+                                        csvLogger.stopLogging()
+                                    }
+                                    else
+                                    {
+                                        csvLogger.startLogging()
+                                    }
+                                }
+
+                                background: Rectangle {
+
+                                    radius: 6
+
+                                    color: csvLogger.logging
+                                        ? "#220000"
+                                        : Theme.panelElevated
+
+                                    border.color: csvLogger.logging
+                                                ? "#ff3b3b"
+                                                : Theme.border
+
+                                    border.width: 1
+                                }
+
+                                contentItem: Text {
+
+                                    text: parent.text
+
+                                    color: csvLogger.logging
+                                        ? "#ff4d4d"
+                                        : Theme.textPrimary
+
+                                    font.pixelSize: 12
+
+                                    font.bold: csvLogger.logging
+
+                                    font.family: "monospace"
+
+                                    horizontalAlignment: Text.AlignHCenter
+
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                            }
                         }
 
                         //
