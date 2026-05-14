@@ -79,56 +79,14 @@ ApplicationWindow {
                 // 3D VISUALIZATION PANEL
                 //
 
-                PanelFrame {
+                VisualizationPanel {
 
                     Layout.fillWidth: true
 
                     Layout.fillHeight: true
 
-                    Layout.verticalStretchFactor: 4
-
-                    ColumnLayout {
-
-                        anchors.fill: parent
-
-                        anchors.margins: 14
-
-                        spacing: 12
-
-                        SectionTitle {
-                            title: "3D VISUALIZATION"
-                        }
-
-                        Rectangle {
-
-                            Layout.fillWidth: true
-
-                            Layout.fillHeight: true
-
-                            radius: 8
-
-                            color: Theme.panelElevated
-
-                            border.color: Theme.border
-
-                            border.width: 1
-
-                            Text {
-
-                                anchors.centerIn: parent
-
-                                text: "VESSEL VISUALIZATION"
-
-                                color: Theme.textMuted
-
-                                font.pixelSize: 18
-
-                                font.family: "monospace"
-                            }
-                        }
-                    }
+                    Layout.verticalStretchFactor: 5
                 }
-
                 //
                 // EVENT LOGGER PANEL
                 //

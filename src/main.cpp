@@ -4,13 +4,12 @@
 #include <QQmlContext>
 
 #include <QDebug>
-#include <QTimer>
-
-#include "widgets/Vessel3DWidget.h"
 
 #include "models/telemetry_provider.h"
 #include "models/telemetry_parser.h"
 #include "models/telemetry_packet.h"
+
+#include "visualization/VesselItem.h"
 
 #include "logger/event_logger.h"
 #include "logger/csv_logger.h"
@@ -22,6 +21,17 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    //
+    // REGISTER QML TYPES
+    //
+
+    qmlRegisterType<VesselItem>(
+        "Dashboard.Visualization",
+        1,
+        0,
+        "VesselView"
+    );
 
     //
     // BACKEND OBJECTS
@@ -36,17 +46,6 @@ int main(int argc, char *argv[])
     SerialReader serialReader;
 
     DashboardRuntime runtime;
-
-    //
-    // OPENGL WINDOW
-    //
-
-    Vessel3DWidget* vessel =
-        new Vessel3DWidget();
-
-    vessel->resize(900, 700);
-
-    vessel->show();
 
     //
     // SERIAL TELEMETRY PIPELINE
@@ -96,19 +95,6 @@ int main(int argc, char *argv[])
 
                 csvLogger.logPacket(
                     packet
-                );
-
-                //
-                // UPDATE 3D VESSEL
-                //
-
-                vessel->setOrientation(
-
-                    packet.roll,
-
-                    packet.pitch,
-
-                    packet.yaw
                 );
             }
 
@@ -186,6 +172,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
+    //
+    // CONTEXT PROPERTIES
+    //
+
     engine.rootContext()->setContextProperty(
         "telemetry",
         &telemetry
@@ -217,10 +207,6 @@ int main(int argc, char *argv[])
 
     logger.addLog(
         "Dashboard initialized"
-    );
-
-    logger.addLog(
-        "CSV logging started"
     );
 
     logger.addLog(
@@ -261,7 +247,6 @@ int main(int argc, char *argv[])
             );
         }
     );
-  
 
     //
     // START APPLICATION

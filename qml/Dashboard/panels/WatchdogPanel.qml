@@ -4,7 +4,6 @@ import QtQuick.Layouts
 
 import Dashboard
 
-
 PanelFrame {
 
     ColumnLayout {
@@ -15,13 +14,17 @@ PanelFrame {
 
         spacing: 18
 
+        //
         // TITLE
+        //
 
         SectionTitle {
-            title: "IMU NAVIGATION MODULE"
+            title: "SYSTEM OPERATIONS"
         }
 
-        // HEALTH SECTION
+        //
+        // QUICK ACTIONS
+        //
 
         ColumnLayout {
 
@@ -31,30 +34,248 @@ PanelFrame {
 
             Text {
 
-                text: "HEALTH"
+                text: "CONTROL ACTIONS"
 
                 color: Theme.textMuted
 
                 font.pixelSize: 11
 
                 font.letterSpacing: 2
+
+                font.family: "monospace"
             }
 
-            StatusIndicator {
-                label: "ESP32"
-                active: true
-            }
+            GridLayout {
 
-            StatusIndicator {
-                label: "MPU6500"
-                active: true
-            }
+                columns: 2
 
-            StatusIndicator {
-                label: "BMM350"
-                active: false
+                columnSpacing: 10
+
+                rowSpacing: 10
+
+                Layout.fillWidth: true
+
+                //
+                // CAL GYRO
+                //
+
+                Button {
+
+                    text: "CAL GYRO"
+
+                    Layout.fillWidth: true
+
+                    implicitHeight: 40
+
+                    onClicked: {
+
+                        serialReader.sendLine(
+                            "CAL:GYRO"
+                        )
+
+                        logger.addLog(
+                            "TX > CAL:GYRO"
+                        )
+                    }
+
+                    background: Rectangle {
+
+                        radius: 6
+
+                        color: Theme.panelElevated
+
+                        border.color: Theme.border
+
+                        border.width: 1
+                    }
+
+                    contentItem: Text {
+
+                        text: parent.text
+
+                        color: Theme.textPrimary
+
+                        font.pixelSize: 12
+
+                        font.bold: true
+
+                        font.family: "monospace"
+
+                        horizontalAlignment:
+                            Text.AlignHCenter
+
+                        verticalAlignment:
+                            Text.AlignVCenter
+                    }
+                }
+
+                //
+                // CAL MAG
+                //
+
+                Button {
+
+                    text: "CAL MAG"
+
+                    Layout.fillWidth: true
+
+                    implicitHeight: 40
+
+                    onClicked: {
+
+                        serialReader.sendLine(
+                            "CAL:MAG"
+                        )
+
+                        logger.addLog(
+                            "TX > CAL:MAG"
+                        )
+                    }
+
+                    background: Rectangle {
+
+                        radius: 6
+
+                        color: Theme.panelElevated
+
+                        border.color: Theme.border
+
+                        border.width: 1
+                    }
+
+                    contentItem: Text {
+
+                        text: parent.text
+
+                        color: Theme.textPrimary
+
+                        font.pixelSize: 12
+
+                        font.bold: true
+
+                        font.family: "monospace"
+
+                        horizontalAlignment:
+                            Text.AlignHCenter
+
+                        verticalAlignment:
+                            Text.AlignVCenter
+                    }
+                }
+
+                //
+                // SET BOW
+                //
+
+                Button {
+
+                    text: "SET BOW"
+
+                    Layout.fillWidth: true
+
+                    implicitHeight: 40
+
+                    onClicked: {
+
+                        serialReader.sendLine(
+                            "SET:BOW"
+                        )
+
+                        logger.addLog(
+                            "TX > SET:BOW"
+                        )
+                    }
+
+                    background: Rectangle {
+
+                        radius: 6
+
+                        color: Theme.panelElevated
+
+                        border.color: Theme.borderStrong
+
+                        border.width: 1
+                    }
+
+                    contentItem: Text {
+
+                        text: parent.text
+
+                        color: Theme.textPrimary
+
+                        font.pixelSize: 12
+
+                        font.bold: true
+
+                        font.family: "monospace"
+
+                        horizontalAlignment:
+                            Text.AlignHCenter
+
+                        verticalAlignment:
+                            Text.AlignVCenter
+                    }
+                }
+
+                //
+                // CLEAR BOW
+                //
+
+                Button {
+
+                    text: "CLR BOW"
+
+                    Layout.fillWidth: true
+
+                    implicitHeight: 40
+
+                    onClicked: {
+
+                        serialReader.sendLine(
+                            "SET:BOW:CLEAR"
+                        )
+
+                        logger.addLog(
+                            "TX > SET:BOW:CLEAR"
+                        )
+                    }
+
+                    background: Rectangle {
+
+                        radius: 6
+
+                        color: Theme.panelElevated
+
+                        border.color: Theme.accentRed
+
+                        border.width: 1
+                    }
+
+                    contentItem: Text {
+
+                        text: parent.text
+
+                        color: Theme.accentRed
+
+                        font.pixelSize: 12
+
+                        font.bold: true
+
+                        font.family: "monospace"
+
+                        horizontalAlignment:
+                            Text.AlignHCenter
+
+                        verticalAlignment:
+                            Text.AlignVCenter
+                    }
+                }
             }
         }
+
+        //
+        // DIVIDER
+        //
 
         Rectangle {
 
@@ -65,7 +286,9 @@ PanelFrame {
             color: Theme.border
         }
 
-        // CONNECTION SECTION
+        //
+        // MANUAL COMMAND
+        //
 
         ColumnLayout {
 
@@ -75,115 +298,155 @@ PanelFrame {
 
             Text {
 
-                text: "CONNECTION"
+                text: "MANUAL COMMAND"
 
                 color: Theme.textMuted
 
                 font.pixelSize: 11
 
                 font.letterSpacing: 2
-            }
-
-            StatusIndicator {
-                label: "SERIAL STREAM"
-                active: true
-            }
-
-            Text {
-
-                text: "PORT : /dev/ttyACM0"
-
-                color: Theme.textPrimary
-
-                font.pixelSize: 13
 
                 font.family: "monospace"
             }
 
-            Text {
+            //
+            // INPUT CONTAINER
+            //
 
-                text: "BAUD : 115200"
+            Rectangle {
 
-                color: Theme.textPrimary
+                Layout.fillWidth: true
 
-                font.pixelSize: 13
+                implicitHeight: 42
 
-                font.family: "monospace"
+                radius: 6
+
+                color: Theme.bgSecondary
+
+                border.color: Theme.border
+
+                border.width: 1
+
+                RowLayout {
+
+                    anchors.fill: parent
+
+                    anchors.leftMargin: 10
+
+                    anchors.rightMargin: 10
+
+                    spacing: 8
+
+                    Text {
+
+                        text: ">"
+
+                        color: Theme.textMuted
+
+                        font.pixelSize: 14
+
+                        font.family: "monospace"
+                    }
+
+                    TextField {
+
+                        id: commandInput
+
+                        Layout.fillWidth: true
+
+                        placeholderText:
+                            "ENTER SERIAL COMMAND"
+
+                        placeholderTextColor:
+                            Theme.textMuted
+
+                        color: Theme.textPrimary
+
+                        font.pixelSize: 13
+
+                        font.family: "monospace"
+
+                        background: Item {}
+
+                        onAccepted: {
+
+                            if (text.length <= 0)
+                                return
+
+                            serialReader.sendLine(
+                                text
+                            )
+
+                            logger.addLog(
+                                "TX > " + text
+                            )
+
+                            text = ""
+                        }
+                    }
+                }
             }
-        }
 
-        Rectangle {
+            //
+            // SEND BUTTON
+            //
 
-            Layout.fillWidth: true
+            Button {
 
-            height: 1
+                text: "SEND COMMAND"
 
-            color: Theme.border
-        }
+                Layout.fillWidth: true
 
-        // TELEMETRY SECTION
+                implicitHeight: 40
 
-        ColumnLayout {
+                onClicked: {
 
-            Layout.fillWidth: true
+                    if (
+                        commandInput.text.length <= 0
+                    )
+                        return
 
-            spacing: 10
+                    serialReader.sendLine(
+                        commandInput.text
+                    )
 
-            Text {
+                    logger.addLog(
+                        "TX > "
+                        + commandInput.text
+                    )
 
-                text: "TELEMETRY"
+                    commandInput.text = ""
+                }
 
-                color: Theme.textMuted
+                background: Rectangle {
 
-                font.pixelSize: 11
+                    radius: 6
 
-                font.letterSpacing: 2
-            }
+                    color: Theme.panelElevated
 
-            Text {
+                    border.color: Theme.border
 
-                text: "PACKET RATE : 92 Hz"
+                    border.width: 1
+                }
 
-                color: Theme.textPrimary
+                contentItem: Text {
 
-                font.pixelSize: 13
+                    text: parent.text
 
-                font.family: "monospace"
-            }
+                    color: Theme.textPrimary
 
-            Text {
+                    font.pixelSize: 12
 
-                text: "LAST UPDATE : 14 ms"
+                    font.bold: true
 
-                color: "#94a3b8"
+                    font.family: "monospace"
 
-                font.pixelSize: 13
+                    horizontalAlignment:
+                        Text.AlignHCenter
 
-                font.family: "monospace"
-            }
-
-            Text {
-
-                text: "UPTIME : 01:14:22"
-
-                color: Theme.textSecondary
-
-                font.pixelSize: 13
-
-                font.family: "monospace"
-            }
-
-            Text {
-
-                text: "STATUS : HEALTHY"
-
-                color: Theme.textPrimary
-
-                font.pixelSize: 14
-
-                font.bold: true
-
-                font.family: "monospace"
+                    verticalAlignment:
+                        Text.AlignVCenter
+                }
             }
         }
 

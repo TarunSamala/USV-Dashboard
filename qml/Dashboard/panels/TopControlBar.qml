@@ -8,6 +8,26 @@ PanelFrame {
 
     implicitHeight: 72
 
+    //
+    // LIVE CLOCK
+    //
+
+    property date currentTime: new Date()
+
+    Timer {
+
+        interval: 1000
+
+        running: true
+
+        repeat: true
+
+        onTriggered: {
+
+            currentTime = new Date()
+        }
+    }
+
     RowLayout {
 
         anchors.fill: parent
@@ -202,7 +222,7 @@ PanelFrame {
         }
 
         //
-        // REFRESH BUTTON
+        // REFRESH
         //
 
         Button {
@@ -246,7 +266,7 @@ PanelFrame {
         }
 
         //
-        // CONNECT BUTTON
+        // CONNECT
         //
 
         Button {
@@ -261,25 +281,12 @@ PanelFrame {
 
             onClicked: {
 
-                //
-                // DISCONNECT
-                //
-
                 if (runtime.connected)
                 {
                     serialReader.disconnectPort()
                 }
-
-                //
-                // CONNECT
-                //
-
                 else
                 {
-                    //
-                    // Safety check
-                    //
-
                     if (
                         runtime.currentPort === ""
                     )
@@ -290,11 +297,6 @@ PanelFrame {
 
                         return
                     }
-
-                    console.log(
-                        "Connecting to:",
-                        runtime.currentPort
-                    )
 
                     serialReader.connectPort(
                         runtime.currentPort
@@ -311,7 +313,7 @@ PanelFrame {
                        : Theme.panelElevated
 
                 border.color: runtime.connected
-                              ? "#cc0000"
+                              ? Theme.accentRed
                               : Theme.border
 
                 border.width: 1
@@ -336,7 +338,7 @@ PanelFrame {
         }
 
         //
-        // CONNECTION STATUS
+        // STATUS INDICATOR
         //
 
         Rectangle {
@@ -368,39 +370,7 @@ PanelFrame {
         }
 
         //
-        // FIRMWARE VERSION
-        //
-
-        Rectangle {
-
-            implicitWidth: 180
-
-            implicitHeight: 42
-
-            radius: 6
-
-            color: Theme.panelElevated
-
-            border.color: Theme.border
-
-            border.width: 1
-
-            Text {
-
-                anchors.centerIn: parent
-
-                text: runtime.firmwareVersion
-
-                color: Theme.textPrimary
-
-                font.pixelSize: 13
-
-                font.family: "monospace"
-            }
-        }
-
-        //
-        // UTC TIME
+        // UTC CLOCK
         //
 
         Rectangle {
@@ -421,10 +391,17 @@ PanelFrame {
 
                 anchors.centerIn: parent
 
-                text: Qt.formatTime(
-                    new Date(),
-                    "hh:mm:ss"
-                ) + " UTC"
+                property date utcTime:
+                    new Date(
+                        currentTime.getTime()
+                        + (currentTime.getTimezoneOffset() * 60000)
+                    )
+
+                text:
+                    Qt.formatTime(
+                        utcTime,
+                        "hh:mm:ss"
+                    ) + " UTC"
 
                 color: Theme.textPrimary
 
@@ -435,7 +412,7 @@ PanelFrame {
         }
 
         //
-        // IST TIME
+        // IST CLOCK
         //
 
         Rectangle {
@@ -456,12 +433,11 @@ PanelFrame {
 
                 anchors.centerIn: parent
 
-                text: Qt.formatTime(
-                    new Date(
-                        Date.now() + (5.5 * 60 * 60 * 1000)
-                    ),
-                    "hh:mm:ss"
-                ) + " IST"
+                text:
+                    Qt.formatTime(
+                        currentTime,
+                        "hh:mm:ss"
+                    ) + " IST"
 
                 color: Theme.textPrimary
 

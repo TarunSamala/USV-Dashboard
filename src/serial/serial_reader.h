@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+
 #include <QSerialPort>
 
 class SerialReader : public QObject
@@ -9,13 +10,31 @@ class SerialReader : public QObject
 
 public:
 
-    explicit SerialReader(QObject* parent = nullptr);
+    explicit SerialReader(
+        QObject* parent = nullptr
+    );
 
-    void start(const QString& portName);
+    //
+    // SERIAL CONTROL
+    //
+
+    void start(
+        const QString& portName
+    );
 
     void stop();
 
-    void sendLine(const QString& line);
+    //
+    // COMMAND TX
+    //
+
+    Q_INVOKABLE void sendLine(
+        const QString& line
+    );
+
+    //
+    // QML CONNECTION API
+    //
 
     Q_INVOKABLE void connectPort(
         const QString& portName
@@ -26,16 +45,20 @@ public:
 signals:
 
     //
-    // Emits COMPLETE newline-terminated lines only
+    // COMPLETE LINES ONLY
     //
 
-    void lineReceived(const QString& line);
+    void lineReceived(
+        const QString& line
+    );
 
     void serialConnected();
 
     void serialDisconnected();
 
-    void serialError(const QString& error);
+    void serialError(
+        const QString& error
+    );
 
 private slots:
 

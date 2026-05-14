@@ -5,6 +5,10 @@ project(USVDashboard LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 #
 # QT MODULES
 #
@@ -17,7 +21,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     SerialPort
 
     Widgets
-    OpenGLWidgets
+    OpenGL
 )
 
 #
@@ -49,6 +53,7 @@ qt_add_executable(app
     #
 
     src/models/telemetry_provider.cpp
+    src/models/telemetry_parser.cpp
 
     #
     # SERIAL
@@ -59,24 +64,31 @@ qt_add_executable(app
     #
     # LOGGER
     #
+
     src/logger/event_logger.cpp
     src/logger/csv_logger.cpp
 
     #
-    # OPENGL / 3D
+    # RUNTIME
     #
 
-    src/widgets/Vessel3DWidget.cpp
-
-    src/models/telemetry_parser.cpp
-
     src/runtime/dashboard_runtime.cpp
-    
+
+    #
+    # VISUALIZATION
+    #
+
+    src/visualization/VesselItem.cpp
+    src/visualization/VesselItem.h
+
+    src/visualization/VesselRenderer.cpp
+    src/visualization/VesselRenderer.h
 )
 
 #
-# QML MODULE
+# THEME SINGLETON
 #
+
 set_source_files_properties(
 
     qml/Dashboard/theme/Theme.qml
@@ -85,6 +97,10 @@ set_source_files_properties(
 
         QT_QML_SINGLETON_TYPE TRUE
 )
+
+#
+# QML MODULE
+#
 
 qt_add_qml_module(app
 
@@ -112,6 +128,8 @@ qt_add_qml_module(app
 
         qml/Dashboard/panels/WatchdogPanel.qml
 
+        qml/Dashboard/panels/VisualizationPanel.qml
+
         #
         # COMPONENTS
         #
@@ -128,8 +146,9 @@ qt_add_qml_module(app
 
         qml/Dashboard/components/StatusIndicator.qml
 
-        qml/Dashboard/components/AdvancedCompass.qml
-
+        #
+        # THEME
+        #
 
         qml/Dashboard/theme/Theme.qml
 )
@@ -142,15 +161,11 @@ target_include_directories(app PRIVATE
 
     src
 
-    src/widgets
-
     src/models
-
     src/logger
-
     src/serial
-
     src/runtime
+    src/visualization
 )
 
 #
@@ -173,7 +188,7 @@ target_link_libraries(app PRIVATE
 
     Qt6::Widgets
 
-    Qt6::OpenGLWidgets
+    Qt6::OpenGL
 
     #
     # OPENGL
