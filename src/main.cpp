@@ -8,6 +8,8 @@
 #include "models/telemetry_provider.h"
 #include "models/telemetry_parser.h"
 #include "models/telemetry_packet.h"
+#include "logger/system_logger.h"
+#include "runtime/calibration_controller.h"
 
 #include "visualization/VesselItem.h"
 
@@ -47,71 +49,208 @@ int main(int argc, char *argv[])
 
     DashboardRuntime runtime;
 
+    SystemLogger systemLogger;
+
+    CalibrationController calibrationController;
     //
     // SERIAL TELEMETRY PIPELINE
     //
 
     QObject::connect(
-        &serialReader,
-        &SerialReader::lineReceived,
-        [&](const QString& line)
+    &serialReader,
+    &SerialReader::lineReceived,
+    [&](const QString& line)
+    {
+        //
+        // LOGGING
+        //
+        calibrationController.processLine(
+            line
+        );
+        
+        if (line.startsWith("$DATA"))
         {
-            //
-            // LOG RAW TELEMETRY
-            //
-
             logger.addLog(line);
-
-            //
-            // DEBUG OUTPUT
-            //
-
-            qDebug() << "LINE:" << line;
-
-            //
-            // PARSE TELEMETRY
-            //
-
-            TelemetryPacket packet;
-
-            if (
-                TelemetryParser::parse(
-                    line,
-                    packet
-                )
-            )
-            {
-                //
-                // UPDATE TELEMETRY PROVIDER
-                //
-
-                telemetry.updateFromPacket(
-                    packet
-                );
-
-                //
-                // LOG CSV PACKET
-                //
-
-                csvLogger.logPacket(
-                    packet
-                );
-            }
-
-            //
-            // FIRMWARE ACK
-            //
-
-            if (
-                line.startsWith("ACK:")
-            )
-            {
-                runtime.setFirmwareVersion(
-                    line.mid(4)
-                );
-            }
         }
-    );
+        else
+        {
+            systemLogger.addLog(line);
+        }
+
+        //
+        // DEBUG
+        //
+
+        qDebug() << "LINE:" << line;
+        calibrationController.processLine(
+            line
+        );
+        //
+        // TELEMETRY PARSE
+        //
+
+        TelemetryPacket packet;
+
+        if (
+            TelemetryParser::parse(
+                line,
+                packet
+            )
+        )
+        {
+            telemetry.updateFromPacket(
+                packet
+            );
+
+            csvLogger.logPacket(
+                packet
+            );
+        }
+
+        //
+        // FIRMWARE ACK
+        //
+
+        if (line.startsWith("ACK:"))
+        {
+            runtime.setFirmwareVersion(
+                line.mid(4)
+            );
+        }
+
+        //
+        // GYRO CALIBRATION
+        //
+
+        if (line.startsWith("CAL:GYRO:START"))
+        {
+            runtime.setActiveTask(
+                "CALIBRATING GYRO"
+            );
+
+            runtime.setTaskInstruction(
+                "Keep module flat and still"
+            );
+
+            runtime.setTaskProgress(0);
+        }
+
+        //
+        // GYRO PROGRESS
+        //
+
+        if (line.startsWith("CAL:GYRO:PROG:"))
+        {
+            const int progress =
+                line.section(':', 3, 3)
+                .toInt();
+
+            runtime.setTaskProgress(
+                progress
+            );
+        }
+
+        //
+        // GYRO DONE
+        //
+
+        if (line.startsWith("CAL:GYRO:DONE"))
+        {
+            runtime.setTaskProgress(100);
+
+            runtime.setTaskInstruction(
+                "Gyro calibration completed"
+            );
+
+            runtime.setActiveTask(
+                "IDLE"
+            );
+        }
+
+        //
+        // MAG START
+        //
+
+        if (line.startsWith("CAL:MAG:START"))
+        {
+            runtime.setActiveTask(
+                "CALIBRATING MAG"
+            );
+
+            runtime.setTaskInstruction(
+                "Rotate module slowly in all directions"
+            );
+
+            runtime.setTaskProgress(0);
+        }
+
+        //
+        // MAG PROGRESS
+        //
+
+        if (line.startsWith("CAL:MAG:PROG:"))
+        {
+            const QString pct =
+                line.section(':', 3, 3)
+                .section(',', 0, 0);
+
+            runtime.setTaskProgress(
+                pct.toInt()
+            );
+        }
+
+        //
+        // MAG DONE
+        //
+
+        if (line.startsWith("CAL:MAG:DONE"))
+        {
+            runtime.setTaskProgress(100);
+
+            runtime.setTaskInstruction(
+                "Magnetometer calibration completed"
+            );
+
+            runtime.setActiveTask(
+                "IDLE"
+            );
+        }
+
+        //
+        // BOW SETUP
+        //
+
+        if (line.startsWith("BOW:START"))
+        {
+            runtime.setActiveTask(
+                "SETTING BOW"
+            );
+
+            runtime.setTaskInstruction(
+                "Point module toward vessel bow"
+            );
+
+            runtime.setTaskProgress(0);
+        }
+
+        //
+        // BOW COMPLETE
+        //
+
+        if (line.startsWith("BOW:OK"))
+        {
+            runtime.setTaskProgress(100);
+
+            runtime.setTaskInstruction(
+                "Bow offset saved"
+            );
+
+            runtime.setActiveTask(
+                "IDLE"
+            );
+        }
+    }
+);
 
     //
     // SERIAL CONNECTED
@@ -199,6 +338,16 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(
         "csvLogger",
         &csvLogger
+    );
+
+    engine.rootContext()->setContextProperty(
+        "systemLogger",
+        &systemLogger
+    );
+
+    engine.rootContext()->setContextProperty(
+        "calibrationController",
+        &calibrationController
     );
 
     //

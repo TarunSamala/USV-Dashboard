@@ -8,13 +8,13 @@ DashboardRuntime::DashboardRuntime(
     : QObject(parent)
 {
     //
-    // Initial scan
+    // INITIAL SCAN
     //
 
     refreshPorts();
 
     //
-    // Periodic USB scan
+    // PERIODIC PORT SCAN
     //
 
     connect(
@@ -67,6 +67,26 @@ QString DashboardRuntime::firmwareVersion() const
     return m_firmwareVersion;
 }
 
+QString DashboardRuntime::dashboardState() const
+{
+    return m_dashboardState;
+}
+
+QString DashboardRuntime::activeTask() const
+{
+    return m_activeTask;
+}
+
+QString DashboardRuntime::taskInstruction() const
+{
+    return m_taskInstruction;
+}
+
+int DashboardRuntime::taskProgress() const
+{
+    return m_taskProgress;
+}
+
 void DashboardRuntime::setCurrentPort(
     const QString& port
 )
@@ -85,15 +105,7 @@ void DashboardRuntime::setCurrentPort(
 
 void DashboardRuntime::refreshPorts()
 {
-    //
-    // Clear old list
-    //
-
     m_availablePorts.clear();
-
-    //
-    // Scan serial ports
-    //
 
     const auto ports =
         QSerialPortInfo::availablePorts();
@@ -102,10 +114,6 @@ void DashboardRuntime::refreshPorts()
     {
         const QString location =
             port.systemLocation();
-
-        //
-        // Linux USB serial
-        //
 
         const bool validLinuxPort =
 
@@ -116,10 +124,6 @@ void DashboardRuntime::refreshPorts()
 
 #ifdef Q_OS_WIN
 
-        //
-        // Windows COM ports
-        //
-
         const bool validWindowsPort =
             location.startsWith("COM");
 
@@ -129,10 +133,6 @@ void DashboardRuntime::refreshPorts()
             false;
 
 #endif
-
-        //
-        // Add valid ports only
-        //
 
         if (
             validLinuxPort
@@ -157,7 +157,7 @@ void DashboardRuntime::refreshPorts()
     }
 
     //
-    // Auto-select valid port
+    // AUTO SELECT
     //
 
     if (!m_availablePorts.isEmpty())
@@ -172,24 +172,13 @@ void DashboardRuntime::refreshPorts()
             m_currentPort =
                 m_availablePorts.first();
 
-            qDebug()
-                << "Auto-selected:"
-                << m_currentPort;
-
             emit currentPortChanged();
         }
     }
     else
     {
-        //
-        // No ports found
-        //
-
         if (!m_currentPort.isEmpty())
         {
-            qDebug()
-                << "Serial disconnected";
-
             m_currentPort.clear();
 
             emit currentPortChanged();
@@ -207,6 +196,15 @@ void DashboardRuntime::setConnected(
         ? State::RUNNING
         : State::DISCONNECTED;
 
+    //
+    // DASHBOARD STATE
+    //
+
+    m_dashboardState =
+        value
+        ? "RUNNING"
+        : "DISCONNECTED";
+
     qDebug()
         << "Runtime connected:"
         << value;
@@ -214,17 +212,66 @@ void DashboardRuntime::setConnected(
     emit connectionChanged();
 
     emit stateChanged();
+
+    emit dashboardStateChanged();
 }
 
 void DashboardRuntime::setFirmwareVersion(
     const QString& version
 )
 {
+    if (m_firmwareVersion == version)
+        return;
+
     m_firmwareVersion = version;
 
-    qDebug()
-        << "Firmware version:"
-        << version;
-
     emit firmwareChanged();
+}
+
+void DashboardRuntime::setDashboardState(
+    const QString& state
+)
+{
+    if (m_dashboardState == state)
+        return;
+
+    m_dashboardState = state;
+
+    emit dashboardStateChanged();
+}
+
+void DashboardRuntime::setActiveTask(
+    const QString& task
+)
+{
+    if (m_activeTask == task)
+        return;
+
+    m_activeTask = task;
+
+    emit activeTaskChanged();
+}
+
+void DashboardRuntime::setTaskInstruction(
+    const QString& instruction
+)
+{
+    if (m_taskInstruction == instruction)
+        return;
+
+    m_taskInstruction = instruction;
+
+    emit taskInstructionChanged();
+}
+
+void DashboardRuntime::setTaskProgress(
+    int progress
+)
+{
+    if (m_taskProgress == progress)
+        return;
+
+    m_taskProgress = progress;
+
+    emit taskProgressChanged();
 }

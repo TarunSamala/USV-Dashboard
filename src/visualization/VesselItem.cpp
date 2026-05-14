@@ -2,11 +2,18 @@
 
 #include "VesselRenderer.h"
 
+#include <QMouseEvent>
+
 VesselItem::VesselItem(
-    QQuickItem *parent
+    QQuickItem* parent
 )
     : QQuickFramebufferObject(parent)
 {
+    setAcceptedMouseButtons(
+        Qt::AllButtons
+    );
+
+    setAcceptHoverEvents(true);
 }
 
 QQuickFramebufferObject::Renderer*
@@ -32,9 +39,7 @@ float VesselItem::yaw() const
     return m_yaw;
 }
 
-void VesselItem::setRoll(
-    float value
-)
+void VesselItem::setRoll(float value)
 {
     if (m_roll == value)
         return;
@@ -46,9 +51,7 @@ void VesselItem::setRoll(
     update();
 }
 
-void VesselItem::setPitch(
-    float value
-)
+void VesselItem::setPitch(float value)
 {
     if (m_pitch == value)
         return;
@@ -60,9 +63,7 @@ void VesselItem::setPitch(
     update();
 }
 
-void VesselItem::setYaw(
-    float value
-)
+void VesselItem::setYaw(float value)
 {
     if (m_yaw == value)
         return;
@@ -70,6 +71,55 @@ void VesselItem::setYaw(
     m_yaw = value;
 
     emit yawChanged();
+
+    update();
+}
+
+void VesselItem::mousePressEvent(
+    QMouseEvent* event
+)
+{
+    m_lastMousePos =
+        event->position();
+}
+
+void VesselItem::mouseMoveEvent(
+    QMouseEvent* event
+)
+{
+    QPointF delta =
+        event->position()
+        - m_lastMousePos;
+
+    cameraYaw += delta.x() * 0.5f;
+
+    cameraPitch += delta.y() * 0.5f;
+
+    if (cameraPitch > 89.0f)
+        cameraPitch = 89.0f;
+
+    if (cameraPitch < -89.0f)
+        cameraPitch = -89.0f;
+
+    m_lastMousePos =
+        event->position();
+
+    update();
+}
+
+void VesselItem::wheelEvent(
+    QWheelEvent* event
+)
+{
+    cameraDistance -=
+        event->angleDelta().y()
+        * 0.002f;
+
+    if (cameraDistance < 2.0f)
+        cameraDistance = 2.0f;
+
+    if (cameraDistance > 20.0f)
+        cameraDistance = 20.0f;
 
     update();
 }

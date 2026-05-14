@@ -52,11 +52,11 @@ ApplicationWindow {
 
             OrientationPanel {
 
-                Layout.preferredWidth: 320
+                Layout.preferredWidth: 280
 
-                Layout.minimumWidth: 300
+                Layout.minimumWidth: 260
 
-                Layout.maximumWidth: 340
+                Layout.maximumWidth: 300
 
                 Layout.fillHeight: true
             }

@@ -67,12 +67,14 @@ qt_add_executable(app
 
     src/logger/event_logger.cpp
     src/logger/csv_logger.cpp
+    src/logger/system_logger.cpp
 
     #
     # RUNTIME
     #
 
     src/runtime/dashboard_runtime.cpp
+    src/runtime/calibration_controller.cpp
 
     #
     # VISUALIZATION
@@ -83,6 +85,8 @@ qt_add_executable(app
 
     src/visualization/VesselRenderer.cpp
     src/visualization/VesselRenderer.h
+
+    
 )
 
 #
@@ -121,6 +125,8 @@ qt_add_qml_module(app
         #
 
         qml/Dashboard/panels/TopControlBar.qml
+
+        qml/Dashboard/panels/OperationsPanel.qml
 
         qml/Dashboard/panels/OrientationPanel.qml
 

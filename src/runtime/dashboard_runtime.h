@@ -12,6 +12,10 @@ class DashboardRuntime : public QObject
 {
     Q_OBJECT
 
+    //
+    // CONNECTION
+    //
+
     Q_PROPERTY(
         bool connected
         READ connected
@@ -23,6 +27,10 @@ class DashboardRuntime : public QObject
         READ connectionStatus
         NOTIFY stateChanged
     )
+
+    //
+    // SERIAL
+    //
 
     Q_PROPERTY(
         QStringList availablePorts
@@ -37,10 +45,46 @@ class DashboardRuntime : public QObject
         NOTIFY currentPortChanged
     )
 
+    //
+    // FIRMWARE
+    //
+
     Q_PROPERTY(
         QString firmwareVersion
         READ firmwareVersion
         NOTIFY firmwareChanged
+    )
+
+    //
+    // DASHBOARD STATE
+    //
+
+    Q_PROPERTY(
+        QString dashboardState
+        READ dashboardState
+        NOTIFY dashboardStateChanged
+    )
+
+    //
+    // ACTIVE TASK
+    //
+
+    Q_PROPERTY(
+        QString activeTask
+        READ activeTask
+        NOTIFY activeTaskChanged
+    )
+
+    Q_PROPERTY(
+        QString taskInstruction
+        READ taskInstruction
+        NOTIFY taskInstructionChanged
+    )
+
+    Q_PROPERTY(
+        int taskProgress
+        READ taskProgress
+        NOTIFY taskProgressChanged
     )
 
 public:
@@ -58,7 +102,7 @@ public:
     };
 
     //
-    // Runtime state
+    // CONNECTION
     //
 
     bool connected() const;
@@ -66,7 +110,7 @@ public:
     QString connectionStatus() const;
 
     //
-    // Serial ports
+    // SERIAL
     //
 
     QStringList availablePorts() const;
@@ -80,16 +124,50 @@ public:
     Q_INVOKABLE void refreshPorts();
 
     //
-    // Firmware
+    // FIRMWARE
     //
 
     QString firmwareVersion() const;
 
     //
-    // Runtime updates
+    // DASHBOARD STATE
     //
 
-    void setConnected(bool value);
+    QString dashboardState() const;
+
+    void setDashboardState(
+        const QString& state
+    );
+
+    //
+    // ACTIVE TASK
+    //
+
+    QString activeTask() const;
+
+    QString taskInstruction() const;
+
+    int taskProgress() const;
+
+    void setActiveTask(
+        const QString& task
+    );
+
+    void setTaskInstruction(
+        const QString& instruction
+    );
+
+    void setTaskProgress(
+        int progress
+    );
+
+    //
+    // RUNTIME UPDATES
+    //
+
+    void setConnected(
+        bool value
+    );
 
     void setFirmwareVersion(
         const QString& version
@@ -107,17 +185,25 @@ signals:
 
     void firmwareChanged();
 
+    void dashboardStateChanged();
+
+    void activeTaskChanged();
+
+    void taskInstructionChanged();
+
+    void taskProgressChanged();
+
 private:
 
     //
-    // Runtime state
+    // CONNECTION STATE
     //
 
     State m_state =
         State::DISCONNECTED;
 
     //
-    // Serial ports
+    // SERIAL
     //
 
     QStringList m_availablePorts;
@@ -125,14 +211,33 @@ private:
     QString m_currentPort;
 
     //
-    // Firmware
+    // DASHBOARD
+    //
+
+    QString m_dashboardState =
+        "DISCONNECTED";
+
+    //
+    // TASK
+    //
+
+    QString m_activeTask =
+        "IDLE";
+
+    QString m_taskInstruction =
+        "Waiting for operation";
+
+    int m_taskProgress = 0;
+
+    //
+    // FIRMWARE
     //
 
     QString m_firmwareVersion =
         "FW: UNKNOWN";
 
     //
-    // Periodic port scanner
+    // PORT SCANNER
     //
 
     QTimer m_portScanTimer;
