@@ -11,7 +11,7 @@ ApplicationWindow {
     width: 1600
     height: 900
 
-    title: "USV.Heading"
+    title: "IMU NAVIGATION MODULE"
 
     color: Theme.bgPrimary
 

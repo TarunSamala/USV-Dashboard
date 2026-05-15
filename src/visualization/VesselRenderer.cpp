@@ -1,4 +1,3 @@
-
 #include "VesselRenderer.h"
 
 #include "VesselItem.h"
@@ -30,7 +29,7 @@ void VesselRenderer::synchronize(
         static_cast<VesselItem*>(item);
 
     //
-    // IMU ORIENTATION
+    // IMU
     //
 
     m_roll =
@@ -77,7 +76,7 @@ void VesselRenderer::render()
     );
 
     //
-    // BACKGROUND
+    // CLEAR
     //
 
     glClearColor(
@@ -88,7 +87,8 @@ void VesselRenderer::render()
     );
 
     glClear(
-        GL_COLOR_BUFFER_BIT |
+        GL_COLOR_BUFFER_BIT
+        |
         GL_DEPTH_BUFFER_BIT
     );
 
@@ -103,11 +103,12 @@ void VesselRenderer::render()
     glLoadIdentity();
 
     const float aspect =
-        float(size.width()) /
+        float(size.width())
+        /
         float(size.height());
 
     gluPerspective(
-        24.0,
+        35.0,
         aspect,
         0.1,
         100.0
@@ -116,48 +117,40 @@ void VesselRenderer::render()
     //
     // CAMERA
     //
+    // TRUE 360 CAMERA
+    // NO ANGLE LIMITS
+    //
 
     glMatrixMode(GL_MODELVIEW);
 
     glLoadIdentity();
 
-    const float yawRad =
-        qDegreesToRadians(
-            m_cameraYaw
-        );
+    //
+    // CAMERA DISTANCE
+    //
 
-    const float pitchRad =
-        qDegreesToRadians(
-            m_cameraPitch
-        );
+    glTranslatef(
+        0.0f,
+        0.0f,
+       -m_cameraDistance
+    );
 
-    const float camX =
-        m_cameraDistance
-        * cos(pitchRad)
-        * sin(yawRad);
+    //
+    // CAMERA ROTATION
+    //
 
-    const float camY =
-        m_cameraDistance
-        * sin(pitchRad);
+    glRotatef(
+        m_cameraPitch,
+        1.0f,
+        0.0f,
+        0.0f
+    );
 
-    const float camZ =
-        m_cameraDistance
-        * cos(pitchRad)
-        * cos(yawRad);
-
-    gluLookAt(
-
-        camX,
-        camY,
-        camZ,
-
-        0.0,
-        0.0,
-        0.0,
-
-        0.0,
-        1.0,
-        0.0
+    glRotatef(
+        m_cameraYaw,
+        0.0f,
+        1.0f,
+        0.0f
     );
 
     //
@@ -167,9 +160,9 @@ void VesselRenderer::render()
     glLineWidth(1.0f);
 
     glColor3f(
-        0.05f,
-        0.05f,
-        0.05f
+        0.06f,
+        0.06f,
+        0.06f
     );
 
     glBegin(GL_LINES);
@@ -182,7 +175,7 @@ void VesselRenderer::render()
 
         glVertex3f(
             -8.0f,
-            0.0f,
+             0.0f,
             (float)i
         );
 
@@ -212,86 +205,9 @@ void VesselRenderer::render()
     glEnd();
 
     //
-    // STATIC WORLD AXES
-    //
-
-    glLineWidth(4.0f);
-
-    glBegin(GL_LINES);
-
-    //
-    // X AXIS (RED)
-    // FORWARD / AWAY
-    //
-
-    glColor3f(
-        1.0f,
-        0.0f,
-        0.0f
-    );
-
-    glVertex3f(
-        0.0f,
-        0.0f,
-        0.0f
-    );
-
-    glVertex3f(
-        0.0f,
-        0.0f,
-        2.0f
-    );
-
-    //
-    // Y AXIS (BLUE)
-    // RIGHT
-    //
-
-    glColor3f(
-        0.0f,
-        0.45f,
-        1.0f
-    );
-
-    glVertex3f(
-        0.0f,
-        0.0f,
-        0.0f
-    );
-
-    glVertex3f(
-        2.0f,
-        0.0f,
-        0.0f
-    );
-
-    //
-    // Z AXIS (GREEN)
-    // UP
-    //
-
-    glColor3f(
-        0.0f,
-        1.0f,
-        0.0f
-    );
-
-    glVertex3f(
-        0.0f,
-        0.0f,
-        0.0f
-    );
-
-    glVertex3f(
-        0.0f,
-       -2.0f,
-        0.0f
-    );
-
-    glEnd();
-
-    //
-    // ROTATING BODY FRAME
+    // ====================================
+    // IMU BOX
+    // ====================================
     //
 
     glPushMatrix();
@@ -322,13 +238,13 @@ void VesselRenderer::render()
     );
 
     //
-    // IMU BOX
+    // BOX COLOR
     //
 
     glColor3f(
-        0.35f,
-        0.35f,
-        0.35f
+        0.40f,
+        0.40f,
+        0.40f
     );
 
     glBegin(GL_QUADS);
@@ -337,48 +253,70 @@ void VesselRenderer::render()
     // TOP
     //
 
-    glVertex3f(-0.45f,  0.15f, -0.45f);
-    glVertex3f( 0.45f,  0.15f, -0.45f);
-    glVertex3f( 0.45f,  0.15f,  0.45f);
-    glVertex3f(-0.45f,  0.15f,  0.45f);
+    glVertex3f(-0.6f,  0.15f, -0.45f);
+    glVertex3f( 0.6f,  0.15f, -0.45f);
+    glVertex3f( 0.6f,  0.15f,  0.45f);
+    glVertex3f(-0.6f,  0.15f,  0.45f);
 
     //
     // BOTTOM
     //
 
-    glVertex3f(-0.45f, -0.15f, -0.45f);
-    glVertex3f( 0.45f, -0.15f, -0.45f);
-    glVertex3f( 0.45f, -0.15f,  0.45f);
-    glVertex3f(-0.45f, -0.15f,  0.45f);
+    glVertex3f(-0.6f, -0.15f, -0.45f);
+    glVertex3f( 0.6f, -0.15f, -0.45f);
+    glVertex3f( 0.6f, -0.15f,  0.45f);
+    glVertex3f(-0.6f, -0.15f,  0.45f);
+
+    //
+    // FRONT
+    //
+
+    glVertex3f(-0.6f, -0.15f, 0.45f);
+    glVertex3f(-0.6f,  0.15f, 0.45f);
+    glVertex3f( 0.6f,  0.15f, 0.45f);
+    glVertex3f( 0.6f, -0.15f, 0.45f);
+
+    //
+    // BACK
+    //
+
+    glVertex3f(-0.6f, -0.15f, -0.45f);
+    glVertex3f(-0.6f,  0.15f, -0.45f);
+    glVertex3f( 0.6f,  0.15f, -0.45f);
+    glVertex3f( 0.6f, -0.15f, -0.45f);
 
     //
     // LEFT
     //
 
-    glVertex3f(-0.45f, -0.15f, -0.45f);
-    glVertex3f(-0.45f,  0.15f, -0.45f);
-    glVertex3f( 0.45f,  0.15f, -0.45f);
-    glVertex3f( 0.45f, -0.15f, -0.45f);
+    glVertex3f(-0.6f, -0.15f, -0.45f);
+    glVertex3f(-0.6f,  0.15f, -0.45f);
+    glVertex3f(-0.6f,  0.15f,  0.45f);
+    glVertex3f(-0.6f, -0.15f,  0.45f);
 
     //
     // RIGHT
     //
 
-    glVertex3f(-0.45f, -0.15f, 0.45f);
-    glVertex3f(-0.45f,  0.15f, 0.45f);
-    glVertex3f( 0.45f,  0.15f, 0.45f);
-    glVertex3f( 0.45f, -0.15f, 0.45f);
+    glVertex3f(0.6f, -0.15f, -0.45f);
+    glVertex3f(0.6f,  0.15f, -0.45f);
+    glVertex3f(0.6f,  0.15f,  0.45f);
+    glVertex3f(0.6f, -0.15f,  0.45f);
 
     glEnd();
 
     //
-    // BOW ARROW
+    // ====================================
+    // RED BOW ARROW
+    // ON TOP OF BOX
+    // POINTING AWAY
+    // ====================================
     //
 
-    glLineWidth(2.0f);
+    glLineWidth(4.0f);
 
     glColor3f(
-        0.0f,
+        1.0f,
         0.0f,
         0.0f
     );
@@ -391,14 +329,14 @@ void VesselRenderer::render()
 
     glVertex3f(
         0.0f,
-        0.22f,
+        0.20f,
         0.0f
     );
 
     glVertex3f(
         0.0f,
-        0.22f,
-        0.60f
+        0.20f,
+       -0.85f
     );
 
     //
@@ -407,14 +345,14 @@ void VesselRenderer::render()
 
     glVertex3f(
         0.0f,
-        0.22f,
-        0.60f
+        0.20f,
+       -0.85f
     );
 
     glVertex3f(
-       -0.08f,
-        0.22f,
-        0.50f
+       -0.10f,
+        0.20f,
+       -0.68f
     );
 
     //
@@ -423,22 +361,27 @@ void VesselRenderer::render()
 
     glVertex3f(
         0.0f,
-        0.22f,
-        0.60f
+        0.20f,
+       -0.85f
     );
 
     glVertex3f(
-        0.08f,
-        0.22f,
-        0.50f
+        0.10f,
+        0.20f,
+       -0.68f
     );
 
     glEnd();
 
     //
-    // END ROTATING FRAME
+    // END IMU
     //
 
     glPopMatrix();
-}
 
+    //
+    // CONTINUOUS UPDATE
+    //
+
+    update();
+}

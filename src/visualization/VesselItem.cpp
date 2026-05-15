@@ -91,15 +91,20 @@ void VesselItem::mouseMoveEvent(
         event->position()
         - m_lastMousePos;
 
-    cameraYaw += delta.x() * 0.5f;
+    //
+    // FULL 360 CAMERA
+    //
 
-    cameraPitch += delta.y() * 0.5f;
+    cameraYaw +=
+        delta.x() * 0.6f;
 
-    if (cameraPitch > 89.0f)
-        cameraPitch = 89.0f;
+    cameraPitch +=
+        delta.y() * 0.6f;
 
-    if (cameraPitch < -89.0f)
-        cameraPitch = -89.0f;
+    //
+    // NO PITCH CLAMP
+    // TRUE SPHERICAL CAMERA
+    //
 
     m_lastMousePos =
         event->position();

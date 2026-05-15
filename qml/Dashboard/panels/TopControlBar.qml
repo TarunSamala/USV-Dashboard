@@ -42,7 +42,7 @@ PanelFrame {
 
         Text {
 
-            text: "USV.Heading"
+            text: "IMU NAVIGATION MODULE"
 
             color: Theme.textPrimary
 
