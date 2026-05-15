@@ -22,9 +22,9 @@ PanelFrame {
             title: "IMU SENSOR MATRIX"
         }
 
-        //
+        
         // ACCELEROMETER
-        //
+        
 
         ColumnLayout {
 
@@ -36,7 +36,7 @@ PanelFrame {
 
                 text: "ACCELEROMETER"
 
-                color: "#5d7b96"
+                color: Theme.textPrimary
 
                 font.pixelSize: 11
 
@@ -57,28 +57,28 @@ PanelFrame {
                     title: "AX"
                     value: telemetry.accelX.toFixed(2)
                     unit: "m/s²"
-                    valueColor: "#22d3ee"
+                    valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "AY"
                     value: telemetry.accelY.toFixed(2)
                     unit: "m/s²"
-                    valueColor: "#22d3ee"
+                    valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "AZ"
                     value: telemetry.accelZ.toFixed(2)
                     unit: "m/s²"
-                    valueColor: "#22d3ee"
+                    valueColor: Theme.textPrimary
                 }
             }
         }
 
-        //
+        
         // GYROSCOPE
-        //
+        
 
         ColumnLayout {
 
@@ -90,7 +90,7 @@ PanelFrame {
 
                 text: "GYROSCOPE"
 
-                color: "#5d7b96"
+                color: Theme.textPrimary
 
                 font.pixelSize: 11
 
@@ -111,28 +111,28 @@ PanelFrame {
                     title: "GX"
                     value: telemetry.gyroX.toFixed(2)
                     unit: "rad/s"
-                    valueColor: "#4ade80"
+                    valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "GY"
                     value: telemetry.gyroY.toFixed(2)
                     unit: "rad/s"
-                    valueColor: "#4ade80"
+                    valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "GZ"
                     value: telemetry.gyroZ.toFixed(2)
                     unit: "rad/s"
-                    valueColor: "#4ade80"
+                    valueColor: Theme.textPrimary
                 }
             }
         }
 
-        //
+        
         // MAGNETOMETER
-        //
+        
 
         ColumnLayout {
 
@@ -144,7 +144,7 @@ PanelFrame {
 
                 text: "MAGNETOMETER"
 
-                color: "#5d7b96"
+                color: Theme.textPrimary
 
                 font.pixelSize: 11
 
@@ -165,21 +165,21 @@ PanelFrame {
                     title: "MX"
                     value: telemetry.magX.toFixed(1)
                     unit: "µT"
-                    valueColor: "#fb923c"
+                    valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "MY"
                     value: telemetry.magY.toFixed(1)
                     unit: "µT"
-                    valueColor: "#fb923c"
+                    valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "MZ"
                     value: telemetry.magZ.toFixed(1)
                     unit: "µT"
-                    valueColor: "#fb923c"
+                    valueColor: Theme.textPrimary
                 }
             }
         }

@@ -4,7 +4,7 @@
 
 #include <QStringList>
 
-class EventLogger : public QObject
+class SystemLogger : public QObject
 {
     Q_OBJECT
 
@@ -16,7 +16,7 @@ class EventLogger : public QObject
 
 public:
 
-    explicit EventLogger(
+    explicit SystemLogger(
         QObject* parent = nullptr
     );
 

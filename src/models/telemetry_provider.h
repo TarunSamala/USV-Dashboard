@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QObject>
-#include <QTimer>
 
-class TelemetryProvider : public QObject {
+#include "telemetry_packet.h"
 
+class TelemetryProvider : public QObject
+{
     Q_OBJECT
 
     Q_PROPERTY(double roll READ roll NOTIFY telemetryChanged)
@@ -25,22 +26,44 @@ class TelemetryProvider : public QObject {
 
 public:
 
-    explicit TelemetryProvider(QObject* parent = nullptr);
+    explicit TelemetryProvider(
+        QObject* parent = nullptr
+    );
+
+    //
+    // REAL TELEMETRY UPDATE
+    //
+
+    void updateFromPacket(
+        const TelemetryPacket& packet
+    );
+
+    //
+    // READERS
+    //
 
     double roll() const { return m_roll; }
+
     double pitch() const { return m_pitch; }
+
     double yaw() const { return m_yaw; }
 
     double accelX() const { return m_accelX; }
+
     double accelY() const { return m_accelY; }
+
     double accelZ() const { return m_accelZ; }
 
     double gyroX() const { return m_gyroX; }
+
     double gyroY() const { return m_gyroY; }
+
     double gyroZ() const { return m_gyroZ; }
 
     double magX() const { return m_magX; }
+
     double magY() const { return m_magY; }
+
     double magZ() const { return m_magZ; }
 
 signals:
@@ -49,23 +72,43 @@ signals:
 
 private:
 
-    QTimer m_timer;
+    //
+    // ORIENTATION
+    //
 
     double m_roll = 0.0;
+
     double m_pitch = 0.0;
+
     double m_yaw = 0.0;
 
+    //
+    // ACCELEROMETER
+    //
+
     double m_accelX = 0.0;
+
     double m_accelY = 0.0;
-    double m_accelZ = 9.81;
+
+    double m_accelZ = 0.0;
+
+    //
+    // GYROSCOPE
+    //
 
     double m_gyroX = 0.0;
+
     double m_gyroY = 0.0;
+
     double m_gyroZ = 0.0;
 
-    double m_magX = 0.0;
-    double m_magY = 0.0;
-    double m_magZ = 0.0;
+    //
+    // MAGNETOMETER
+    //
 
-    void updateTelemetry();
+    double m_magX = 0.0;
+
+    double m_magY = 0.0;
+
+    double m_magZ = 0.0;
 };

@@ -19,178 +19,201 @@ PanelFrame {
         //
 
         SectionTitle {
-            title: "SYSTEM STATUS"
+            title: "SYSTEM OPERATIONS"
         }
 
         //
-        // HEALTH SECTION
+        // CONTROLS
         //
 
-        ColumnLayout {
+        Text {
 
-            Layout.fillWidth: true
+            text: "CONTROL ACTIONS"
 
-            spacing: 10
+            color: Theme.textMuted
 
-            Text {
+            font.pixelSize: 11
 
-                text: "HEALTH"
+            font.letterSpacing: 2
 
-                color: "#64748b"
-
-                font.pixelSize: 11
-
-                font.letterSpacing: 2
-            }
-
-            StatusIndicator {
-                label: "ESP32"
-                active: true
-            }
-
-            StatusIndicator {
-                label: "MPU6500"
-                active: true
-            }
-
-            StatusIndicator {
-                label: "BMM350"
-                active: true
-            }
+            font.family: "monospace"
         }
 
-        Rectangle {
+        GridLayout {
 
             Layout.fillWidth: true
 
-            height: 1
+            columns: 1
 
-            color: "#16324a"
-        }
+            rowSpacing: 12
 
-        //
-        // CONNECTION SECTION
-        //
+            columnSpacing: 10
 
-        ColumnLayout {
+            //
+            // CAL GYRO
+            //
 
-            Layout.fillWidth: true
+            Button {
 
-            spacing: 10
+                text: "CAL GYRO"
 
-            Text {
+                Layout.fillWidth: true
 
-                text: "CONNECTION"
+                implicitHeight: 44
 
-                color: "#64748b"
+                enabled:
+                    !calibrationController.active
 
-                font.pixelSize: 11
+                onClicked: {
 
-                font.letterSpacing: 2
+                    serialReader.sendLine(
+                        "STOP"
+                    )
+
+                    serialReader.sendLine(
+                        "CAL:GYRO"
+                    )
+                }
+
+                background: Rectangle {
+
+                    radius: 6
+
+                    color: Theme.panelElevated
+
+                    border.color: Theme.border
+
+                    border.width: 1
+                }
+
+                contentItem: Text {
+
+                    text: parent.text
+
+                    color: Theme.textPrimary
+
+                    font.pixelSize: 12
+
+                    font.bold: true
+
+                    font.family: "monospace"
+
+                    horizontalAlignment:
+                        Text.AlignHCenter
+
+                    verticalAlignment:
+                        Text.AlignVCenter
+                }
             }
 
-            StatusIndicator {
-                label: "SERIAL STREAM"
-                active: true
+            //
+            // CAL MAG
+            //
+
+            Button {
+
+                text: "CAL MAG"
+
+                Layout.fillWidth: true
+
+                implicitHeight: 44
+
+                enabled:
+                    !calibrationController.active
+
+                onClicked: {
+
+                    serialReader.sendLine(
+                        "STOP"
+                    )
+
+                    serialReader.sendLine(
+                        "CAL:MAG"
+                    )
+                }
+
+                background: Rectangle {
+
+                    radius: 6
+
+                    color: Theme.panelElevated
+
+                    border.color: Theme.border
+
+                    border.width: 1
+                }
+
+                contentItem: Text {
+
+                    text: parent.text
+
+                    color: Theme.textPrimary
+
+                    font.pixelSize: 12
+
+                    font.bold: true
+
+                    font.family: "monospace"
+
+                    horizontalAlignment:
+                        Text.AlignHCenter
+
+                    verticalAlignment:
+                        Text.AlignVCenter
+                }
             }
 
-            Text {
+            //
+            // SET BOW
+            //
 
-                text: "PORT : /dev/ttyACM0"
+            Button {
 
-                color: "#67e8f9"
+                text: "SET BOW"
 
-                font.pixelSize: 13
+                Layout.fillWidth: true
 
-                font.family: "monospace"
-            }
+                implicitHeight: 44
 
-            Text {
+                enabled:
+                    !calibrationController.active
 
-                text: "BAUD : 115200"
+                onClicked: {
 
-                color: "#67e8f9"
+                    serialReader.sendLine(
+                        "SET:BOW"
+                    )
+                }
 
-                font.pixelSize: 13
+                background: Rectangle {
 
-                font.family: "monospace"
-            }
-        }
+                    radius: 6
 
-        Rectangle {
+                    color: Theme.panelElevated
 
-            Layout.fillWidth: true
+                    border.color: Theme.borderStrong
 
-            height: 1
+                    border.width: 1
+                }
 
-            color: "#16324a"
-        }
+                contentItem: Text {
 
-        //
-        // TELEMETRY SECTION
-        //
+                    text: parent.text
 
-        ColumnLayout {
+                    color: Theme.textPrimary
 
-            Layout.fillWidth: true
+                    font.pixelSize: 12
 
-            spacing: 10
+                    font.bold: true
 
-            Text {
+                    font.family: "monospace"
 
-                text: "TELEMETRY"
+                    horizontalAlignment:
+                        Text.AlignHCenter
 
-                color: "#64748b"
-
-                font.pixelSize: 11
-
-                font.letterSpacing: 2
-            }
-
-            Text {
-
-                text: "PACKET RATE : 92 Hz"
-
-                color: "#67e8f9"
-
-                font.pixelSize: 13
-
-                font.family: "monospace"
-            }
-
-            Text {
-
-                text: "LAST UPDATE : 14 ms"
-
-                color: "#94a3b8"
-
-                font.pixelSize: 13
-
-                font.family: "monospace"
-            }
-
-            Text {
-
-                text: "UPTIME : 01:14:22"
-
-                color: "#94a3b8"
-
-                font.pixelSize: 13
-
-                font.family: "monospace"
-            }
-
-            Text {
-
-                text: "STATUS : HEALTHY"
-
-                color: "#22c55e"
-
-                font.pixelSize: 14
-
-                font.bold: true
-
-                font.family: "monospace"
+                    verticalAlignment:
+                        Text.AlignVCenter
+                }
             }
         }
 

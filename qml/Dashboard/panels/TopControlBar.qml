@@ -8,6 +8,26 @@ PanelFrame {
 
     implicitHeight: 72
 
+    //
+    // LIVE CLOCK
+    //
+
+    property date currentTime: new Date()
+
+    Timer {
+
+        interval: 1000
+
+        running: true
+
+        repeat: true
+
+        onTriggered: {
+
+            currentTime = new Date()
+        }
+    }
+
     RowLayout {
 
         anchors.fill: parent
@@ -22,9 +42,9 @@ PanelFrame {
 
         Text {
 
-            text: "USV.HEADING"
+            text: "IMU NAVIGATION MODULE"
 
-            color: "#22d3ee"
+            color: Theme.textPrimary
 
             font.pixelSize: 24
 
@@ -47,18 +67,111 @@ PanelFrame {
 
             id: portBox
 
-            model: [
-                "/dev/ttyACM0",
-                "/dev/ttyUSB0",
-                "COM3",
-                "COM4"
-            ]
+            model: runtime.availablePorts
 
-            implicitWidth: 180
+            currentIndex:
+                runtime.availablePorts.indexOf(
+                    runtime.currentPort
+                )
+
+            onActivated: {
+
+                runtime.currentPort =
+                    currentText
+            }
+
+            implicitWidth: 220
 
             font.pixelSize: 13
 
             editable: false
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: portBox.displayText
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                verticalAlignment: Text.AlignVCenter
+
+                leftPadding: 10
+            }
+
+            delegate: ItemDelegate {
+
+                width: portBox.width
+
+                contentItem: Text {
+
+                    text: modelData
+
+                    color: Theme.textPrimary
+
+                    font.pixelSize: 12
+
+                    font.family: "monospace"
+
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                background: Rectangle {
+
+                    color: hovered
+                           ? "#252525"
+                           : Theme.panelElevated
+                }
+            }
+
+            popup: Popup {
+
+                y: portBox.height + 4
+
+                width: portBox.width
+
+                implicitHeight: contentItem.implicitHeight
+
+                padding: 2
+
+                background: Rectangle {
+
+                    radius: 6
+
+                    color: Theme.panelElevated
+
+                    border.color: Theme.border
+
+                    border.width: 1
+                }
+
+                contentItem: ListView {
+
+                    clip: true
+
+                    implicitHeight: contentHeight
+
+                    model: portBox.popup.visible
+                           ? portBox.delegateModel
+                           : null
+
+                    currentIndex:
+                        portBox.highlightedIndex
+                }
+            }
         }
 
         //
@@ -80,10 +193,36 @@ PanelFrame {
             implicitWidth: 120
 
             font.pixelSize: 13
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: baudBox.displayText
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                verticalAlignment: Text.AlignVCenter
+
+                leftPadding: 10
+            }
         }
 
         //
-        // REFRESH BUTTON
+        // REFRESH
         //
 
         Button {
@@ -93,23 +232,113 @@ PanelFrame {
             implicitHeight: 38
 
             implicitWidth: 110
+
+            onClicked: {
+
+                runtime.refreshPorts()
+            }
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: Theme.panelElevated
+
+                border.color: Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: parent.text
+
+                color: Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                horizontalAlignment: Text.AlignHCenter
+
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
         //
-        // CONNECT BUTTON
+        // CONNECT
         //
 
         Button {
 
-            text: "CONNECT"
+            text: runtime.connected
+                  ? "DISCONNECT"
+                  : "CONNECT"
 
             implicitHeight: 38
 
             implicitWidth: 120
+
+            onClicked: {
+
+                if (runtime.connected)
+                {
+                    serialReader.disconnectPort()
+                }
+                else
+                {
+                    if (
+                        runtime.currentPort === ""
+                    )
+                    {
+                        console.log(
+                            "No serial port selected"
+                        )
+
+                        return
+                    }
+
+                    serialReader.connectPort(
+                        runtime.currentPort
+                    )
+                }
+            }
+
+            background: Rectangle {
+
+                radius: 6
+
+                color: runtime.connected
+                       ? "#220909"
+                       : Theme.panelElevated
+
+                border.color: runtime.connected
+                              ? Theme.accentRed
+                              : Theme.border
+
+                border.width: 1
+            }
+
+            contentItem: Text {
+
+                text: parent.text
+
+                color: runtime.connected
+                       ? "#ff5555"
+                       : Theme.textPrimary
+
+                font.pixelSize: 12
+
+                font.family: "monospace"
+
+                horizontalAlignment: Text.AlignHCenter
+
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
         //
-        // CONNECTION STATUS
+        // STATUS INDICATOR
         //
 
         Rectangle {
@@ -120,18 +349,20 @@ PanelFrame {
 
             radius: 7
 
-            color: "#22c55e"
+            color: runtime.connected
+                   ? Theme.statusActive
+                   : Theme.statusInactive
 
-            border.color: "#0f172a"
+            border.color: Theme.border
 
             border.width: 1
         }
 
         Text {
 
-            text: "CONNECTED"
+            text: runtime.connectionStatus
 
-            color: "#22c55e"
+            color: Theme.textSecondary
 
             font.pixelSize: 13
 
@@ -139,7 +370,7 @@ PanelFrame {
         }
 
         //
-        // UTC TIME
+        // UTC CLOCK
         //
 
         Rectangle {
@@ -150,20 +381,29 @@ PanelFrame {
 
             radius: 6
 
-            color: "#071122"
+            color: Theme.panelElevated
 
-            border.color: "#16324a"
+            border.color: Theme.border
+
+            border.width: 1
 
             Text {
 
                 anchors.centerIn: parent
 
-                text: Qt.formatTime(
-                    new Date(),
-                    "hh:mm:ss"
-                ) + " UTC"
+                property date utcTime:
+                    new Date(
+                        currentTime.getTime()
+                        + (currentTime.getTimezoneOffset() * 60000)
+                    )
 
-                color: "#dbeafe"
+                text:
+                    Qt.formatTime(
+                        utcTime,
+                        "hh:mm:ss"
+                    ) + " UTC"
+
+                color: Theme.textPrimary
 
                 font.pixelSize: 14
 
@@ -172,7 +412,7 @@ PanelFrame {
         }
 
         //
-        // IST TIME
+        // IST CLOCK
         //
 
         Rectangle {
@@ -183,22 +423,23 @@ PanelFrame {
 
             radius: 6
 
-            color: "#071122"
+            color: Theme.panelElevated
 
-            border.color: "#16324a"
+            border.color: Theme.border
+
+            border.width: 1
 
             Text {
 
                 anchors.centerIn: parent
 
-                text: Qt.formatTime(
-                    new Date(
-                        Date.now() + (5.5 * 60 * 60 * 1000)
-                    ),
-                    "hh:mm:ss"
-                ) + " IST"
+                text:
+                    Qt.formatTime(
+                        currentTime,
+                        "hh:mm:ss"
+                    ) + " IST"
 
-                color: "#dbeafe"
+                color: Theme.textPrimary
 
                 font.pixelSize: 14
 

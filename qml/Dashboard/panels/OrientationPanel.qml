@@ -1,5 +1,7 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
+
 import Dashboard
 
 PanelFrame {
@@ -10,56 +12,187 @@ PanelFrame {
 
         anchors.margins: 14
 
-        spacing: 24
+        spacing: 18
+
+        //
+        // TITLE
+        //
 
         SectionTitle {
             title: "ORIENTATION"
         }
 
-        TelemetryValue {
+        //
+        // ROLL
+        //
 
-            label: "ROLL"
+        ColumnLayout {
 
-            value: telemetry.roll.toFixed(2)
+            spacing: 4
 
-            unit: "deg"
+            Text {
 
-            valueColor: "#22d3ee"
-        }
+                text: "ROLL"
 
-        TelemetryValue {
+                color: Theme.textMuted
 
-            label: "PITCH"
+                font.pixelSize: 18
 
-            value: telemetry.pitch.toFixed(2)
+                font.family: "monospace"
 
-            unit: "deg"
+                font.letterSpacing: 3
+            }
 
-            valueColor: "#4ade80"
-        }
+            RowLayout {
 
-        TelemetryValue {
+                spacing: 6
 
-            label: "YAW"
+                Text {
 
-            value: telemetry.yaw.toFixed(2)
+                    text:
+                        Number(
+                            telemetry.roll
+                        ).toFixed(2)
 
-            unit: "deg"
+                    color: Theme.textPrimary
 
-            valueColor: "#f97316"
-        }
-        SectionTitle {
-            title: "COMPASS"
+                    font.pixelSize: 44
+
+                    font.bold: true
+
+                    font.family: "monospace"
                 }
 
-            CompassWidget {
+                Text {
 
-                Layout.alignment: Qt.AlignHCenter
+                    text: "deg"
 
-                heading: telemetry.yaw
+                    color: Theme.textMuted
+
+                    font.pixelSize: 18
+
+                    font.family: "monospace"
                 }
-
-    
             }
         }
-    
+
+        //
+        // PITCH
+        //
+
+        ColumnLayout {
+
+            spacing: 4
+
+            Text {
+
+                text: "PITCH"
+
+                color: Theme.textMuted
+
+                font.pixelSize: 18
+
+                font.family: "monospace"
+
+                font.letterSpacing: 3
+            }
+
+            RowLayout {
+
+                spacing: 6
+
+                Text {
+
+                    text:
+                        Number(
+                            telemetry.pitch
+                        ).toFixed(2)
+
+                    color: Theme.textPrimary
+
+                    font.pixelSize: 44
+
+                    font.bold: true
+
+                    font.family: "monospace"
+                }
+
+                Text {
+
+                    text: "deg"
+
+                    color: Theme.textMuted
+
+                    font.pixelSize: 18
+
+                    font.family: "monospace"
+                }
+            }
+        }
+
+        //
+        // YAW
+        //
+
+        ColumnLayout {
+
+            spacing: 4
+
+            Text {
+
+                text: "YAW"
+
+                color: Theme.textMuted
+
+                font.pixelSize: 18
+
+                font.family: "monospace"
+
+                font.letterSpacing: 3
+            }
+
+            RowLayout {
+
+                spacing: 6
+
+                Text {
+
+                    text:
+                        Number(
+                            telemetry.yaw
+                        ).toFixed(2)
+
+                    color: Theme.textPrimary
+
+                    font.pixelSize: 44
+
+                    font.bold: true
+
+                    font.family: "monospace"
+                }
+
+                Text {
+
+                    text: "deg"
+
+                    color: Theme.textMuted
+
+                    font.pixelSize: 18
+
+                    font.family: "monospace"
+                }
+            }
+        }
+
+        //
+        // OPERATIONS PANEL
+        //
+
+        OperationsPanel {
+
+            Layout.fillWidth: true
+
+            Layout.fillHeight: true
+        }
+    }
+}

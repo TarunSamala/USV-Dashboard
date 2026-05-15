@@ -1,16 +1,19 @@
 import QtQuick
+import Dashboard
 
 Text {
 
     property string title: ""
 
-    text: "// " + title
+    text: title
 
-    color: "#38bdf8"
+    color: Theme.accentRed
 
-    font.pixelSize: 11
+    font.pixelSize: 13
 
     font.letterSpacing: 4
 
     font.family: "monospace"
+
+    font.bold: true
 }

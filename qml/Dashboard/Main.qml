@@ -11,9 +11,9 @@ ApplicationWindow {
     width: 1600
     height: 900
 
-    title: "USV Dashboard"
+    title: "IMU NAVIGATION MODULE"
 
-    color: "#111217"
+    color: Theme.bgPrimary
 
     ColumnLayout {
 
@@ -52,11 +52,11 @@ ApplicationWindow {
 
             OrientationPanel {
 
-                Layout.preferredWidth: 320
+                Layout.preferredWidth: 280
 
-                Layout.minimumWidth: 300
+                Layout.minimumWidth: 260
 
-                Layout.maximumWidth: 340
+                Layout.maximumWidth: 300
 
                 Layout.fillHeight: true
             }
@@ -79,56 +79,14 @@ ApplicationWindow {
                 // 3D VISUALIZATION PANEL
                 //
 
-                PanelFrame {
+                VisualizationPanel {
 
                     Layout.fillWidth: true
 
                     Layout.fillHeight: true
 
-                    Layout.verticalStretchFactor: 4
-
-                    ColumnLayout {
-
-                        anchors.fill: parent
-
-                        anchors.margins: 14
-
-                        spacing: 12
-
-                        SectionTitle {
-                            title: "3D VISUALIZATION"
-                        }
-
-                        Rectangle {
-
-                            Layout.fillWidth: true
-
-                            Layout.fillHeight: true
-
-                            radius: 8
-
-                            color: "#0b0d12"
-
-                            border.color: "#1f2937"
-
-                            border.width: 1
-
-                            Text {
-
-                                anchors.centerIn: parent
-
-                                text: "MPU9250 / Vessel Visualization"
-
-                                color: "#64748b"
-
-                                font.pixelSize: 18
-
-                                font.family: "monospace"
-                            }
-                        }
-                    }
+                    Layout.verticalStretchFactor: 5
                 }
-
                 //
                 // EVENT LOGGER PANEL
                 //
@@ -136,6 +94,8 @@ ApplicationWindow {
                 PanelFrame {
 
                     Layout.fillWidth: true
+
+                    Layout.fillHeight: true
 
                     Layout.preferredHeight: 240
 
@@ -176,6 +136,89 @@ ApplicationWindow {
                                 implicitWidth: 70
 
                                 implicitHeight: 30
+
+                                background: Rectangle {
+
+                                    radius: 6
+
+                                    color: Theme.panelElevated
+
+                                    border.color: Theme.border
+
+                                    border.width: 1
+                                }
+
+                                contentItem: Text {
+
+                                    text: parent.text
+
+                                    color: Theme.textPrimary
+
+                                    font.pixelSize: 11
+
+                                    font.family: "monospace"
+
+                                    horizontalAlignment: Text.AlignHCenter
+
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+                            }
+                            
+                            Button {
+
+                                text: csvLogger.logging
+                                    ? "STOP"
+                                    : "REC"
+
+                                implicitWidth: 90
+
+                                implicitHeight: 32
+
+                                onClicked: {
+
+                                    if (csvLogger.logging)
+                                    {
+                                        csvLogger.stopLogging()
+                                    }
+                                    else
+                                    {
+                                        csvLogger.startLogging()
+                                    }
+                                }
+
+                                background: Rectangle {
+
+                                    radius: 6
+
+                                    color: csvLogger.logging
+                                        ? "#220000"
+                                        : Theme.panelElevated
+
+                                    border.color: csvLogger.logging
+                                                ? "#ff3b3b"
+                                                : Theme.border
+
+                                    border.width: 1
+                                }
+
+                                contentItem: Text {
+
+                                    text: parent.text
+
+                                    color: csvLogger.logging
+                                        ? "#ff4d4d"
+                                        : Theme.textPrimary
+
+                                    font.pixelSize: 12
+
+                                    font.bold: csvLogger.logging
+
+                                    font.family: "monospace"
+
+                                    horizontalAlignment: Text.AlignHCenter
+
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                             }
                         }
 
@@ -191,9 +234,9 @@ ApplicationWindow {
 
                             radius: 6
 
-                            color: "#0b0d12"
+                            color: Theme.panelElevated
 
-                            border.color: "#1f2937"
+                            border.color: Theme.border
 
                             border.width: 1
 
@@ -213,7 +256,7 @@ ApplicationWindow {
 
                                     text: modelData
 
-                                    color: "#94a3b8"
+                                    color: Theme.textSecondary
 
                                     font.pixelSize: 12
 
@@ -246,6 +289,23 @@ ApplicationWindow {
                 spacing: 10
 
                 //
+                // WATCHDOG PANEL
+                //
+
+                WatchdogPanel {
+
+                    Layout.fillWidth: true
+
+                    Layout.fillHeight: true
+
+                    Layout.preferredHeight: 320
+
+                    Layout.minimumHeight: 300
+
+                    Layout.maximumHeight: 340
+                }
+
+                //
                 // SENSOR MATRIX
                 //
 
@@ -258,16 +318,7 @@ ApplicationWindow {
                     Layout.verticalStretchFactor: 3
                 }
 
-                WatchdogPanel {
-
-                    Layout.fillWidth: true
-
-                    Layout.preferredHeight: 320
-
-                    Layout.minimumHeight: 300
-
-                    Layout.maximumHeight: 340
-}
+                
             }
         }
     }
