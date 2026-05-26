@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QOpenGLFunctions>
-
 #include <QQuickFramebufferObject>
 
 class VesselItem;
@@ -16,10 +15,6 @@ public:
         VesselItem* item
     );
 
-    //
-    // QQuickFramebufferObject
-    //
-
     void render() override;
 
     void synchronize(
@@ -28,23 +23,11 @@ public:
 
 private:
 
-    //
-    // IMU ORIENTATION
-    //
-
-    float m_roll = 0.0f;
-
+    float m_roll  = 0.0f;
     float m_pitch = 0.0f;
+    float m_yaw   = 0.0f;
 
-    float m_yaw = 0.0f;
-
-    //
-    // CAMERA
-    //
-
-    float m_cameraYaw = 45.0f;
-
-    float m_cameraPitch = 25.0f;
-
-    float m_cameraDistance = 6.0f;
+    void drawGrid();
+    void drawWorldAxes();
+    void drawVessel();
 };

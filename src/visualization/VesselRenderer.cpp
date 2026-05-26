@@ -1,10 +1,7 @@
 #include "VesselRenderer.h"
-
 #include "VesselItem.h"
 
 #include <QOpenGLFramebufferObject>
-
-#include <QtMath>
 
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
@@ -22,51 +19,21 @@ VesselRenderer::VesselRenderer(
 }
 
 void VesselRenderer::synchronize(
-    QQuickFramebufferObject *item
+    QQuickFramebufferObject* item
 )
 {
     VesselItem* vessel =
         static_cast<VesselItem*>(item);
 
-    //
-    // IMU
-    //
-
-    m_roll =
-        vessel->roll();
-
-    m_pitch =
-        vessel->pitch();
-
-    m_yaw =
-        vessel->yaw();
-
-    //
-    // CAMERA
-    //
-
-    m_cameraYaw =
-        vessel->cameraYaw;
-
-    m_cameraPitch =
-        vessel->cameraPitch;
-
-    m_cameraDistance =
-        vessel->cameraDistance;
+    m_roll  = vessel->roll();
+    m_pitch = vessel->pitch();
+    m_yaw   = vessel->yaw();
 }
 
 void VesselRenderer::render()
 {
-    //
-    // FRAMEBUFFER
-    //
-
     const QSize size =
         framebufferObject()->size();
-
-    //
-    // VIEWPORT
-    //
 
     glViewport(
         0,
@@ -75,24 +42,23 @@ void VesselRenderer::render()
         size.height()
     );
 
+    glEnable(GL_DEPTH_TEST);
+
     //
-    // CLEAR
+    // BACKGROUND
     //
 
     glClearColor(
-        0.02f,
-        0.02f,
-        0.02f,
+        0.04f,
+        0.04f,
+        0.045f,
         1.0f
     );
 
     glClear(
-        GL_COLOR_BUFFER_BIT
-        |
+        GL_COLOR_BUFFER_BIT |
         GL_DEPTH_BUFFER_BIT
     );
-
-    glEnable(GL_DEPTH_TEST);
 
     //
     // PROJECTION
@@ -108,50 +74,55 @@ void VesselRenderer::render()
         float(size.height());
 
     gluPerspective(
-        35.0,
+        45.0,
         aspect,
         0.1,
-        100.0
+        200.0
     );
 
     //
-    // CAMERA
-    //
-    // TRUE 360 CAMERA
-    // NO ANGLE LIMITS
+    // FIXED CAMERA
     //
 
     glMatrixMode(GL_MODELVIEW);
 
     glLoadIdentity();
 
-    //
-    // CAMERA DISTANCE
-    //
-
-    glTranslatef(
-        0.0f,
-        0.0f,
-       -m_cameraDistance
+    gluLookAt(
+        0.0, 4.5, 8.0,
+        0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0
     );
 
+    drawGrid();
+
+    drawWorldAxes();
+
+    drawVessel();
+
+    update();
+}
+
+void VesselRenderer::drawGrid()
+{
     //
-    // CAMERA ROTATION
+    // WATER PLANE
     //
 
-    glRotatef(
-        m_cameraPitch,
-        1.0f,
-        0.0f,
-        0.0f
+    glColor3f(
+        0.08f,
+        0.08f,
+        0.09f
     );
 
-    glRotatef(
-        m_cameraYaw,
-        0.0f,
-        1.0f,
-        0.0f
-    );
+    glBegin(GL_QUADS);
+
+    glVertex3f(-100.0f, 0.0f, -100.0f);
+    glVertex3f( 100.0f, 0.0f, -100.0f);
+    glVertex3f( 100.0f, 0.0f,  100.0f);
+    glVertex3f(-100.0f, 0.0f,  100.0f);
+
+    glEnd();
 
     //
     // GRID
@@ -159,61 +130,83 @@ void VesselRenderer::render()
 
     glLineWidth(1.0f);
 
-    glColor3f(
-        0.06f,
-        0.06f,
-        0.06f
-    );
+    for (int i = -50; i <= 50; ++i)
+    {
+        if (i == 0)
+            glColor3f(0.24f, 0.24f, 0.24f);
+        else
+            glColor3f(0.12f, 0.12f, 0.12f);
+
+        glBegin(GL_LINES);
+
+        glVertex3f(-50.0f, 0.0f, (float)i);
+        glVertex3f( 50.0f, 0.0f, (float)i);
+
+        glVertex3f((float)i, 0.0f, -50.0f);
+        glVertex3f((float)i, 0.0f,  50.0f);
+
+        glEnd();
+    }
+}
+
+void VesselRenderer::drawWorldAxes()
+{
+    glLineWidth(2.0f);
 
     glBegin(GL_LINES);
 
-    for (int i = -8; i <= 8; ++i)
-    {
-        //
-        // X GRID
-        //
+    //
+    // FORWARD
+    //
 
-        glVertex3f(
-            -8.0f,
-             0.0f,
-            (float)i
-        );
+    glColor3f(
+        0.7f,
+        0.15f,
+        0.15f
+    );
 
-        glVertex3f(
-             8.0f,
-             0.0f,
-            (float)i
-        );
+    glVertex3f(0,0,0);
+    glVertex3f(3,0,0);
 
-        //
-        // Z GRID
-        //
+    //
+    // UP
+    //
 
-        glVertex3f(
-            (float)i,
-            0.0f,
-            -8.0f
-        );
+    glColor3f(
+        0.75f,
+        0.75f,
+        0.75f
+    );
 
-        glVertex3f(
-            (float)i,
-            0.0f,
-             8.0f
-        );
-    }
+    glVertex3f(0,0,0);
+    glVertex3f(0,3,0);
+
+    //
+    // LATERAL
+    //
+
+    glColor3f(
+        0.35f,
+        0.35f,
+        0.35f
+    );
+
+    glVertex3f(0,0,0);
+    glVertex3f(0,0,3);
 
     glEnd();
+}
 
-    //
-    // ====================================
-    // IMU BOX
-    // ====================================
-    //
-
+void VesselRenderer::drawVessel()
+{
     glPushMatrix();
 
     //
-    // IMU ROTATION
+    // TELEMETRY ORIENTATION
+    //
+    // Firmware outputs:
+    // Roll/Pitch/Yaw
+    // through Madgwick fusion.
     //
 
     glRotatef(
@@ -225,163 +218,117 @@ void VesselRenderer::render()
 
     glRotatef(
         m_pitch,
-        0.0f,
-        0.0f,
-        1.0f
-    );
-
-    glRotatef(
-        m_roll,
         1.0f,
         0.0f,
         0.0f
     );
 
+    glRotatef(
+        -m_roll,
+        0.0f,
+        0.0f,
+        1.0f
+    );
+
     //
-    // BOX COLOR
+    // MAIN HULL
     //
 
     glColor3f(
-        0.40f,
-        0.40f,
-        0.40f
+        0.20f,
+        0.20f,
+        0.22f
     );
 
     glBegin(GL_QUADS);
 
-    //
-    // TOP
-    //
+    // Deck
 
-    glVertex3f(-0.6f,  0.15f, -0.45f);
-    glVertex3f( 0.6f,  0.15f, -0.45f);
-    glVertex3f( 0.6f,  0.15f,  0.45f);
-    glVertex3f(-0.6f,  0.15f,  0.45f);
+    glVertex3f(-0.45f,  0.10f, -1.40f);
+    glVertex3f( 0.45f,  0.10f, -1.40f);
+    glVertex3f( 0.45f,  0.10f,  1.00f);
+    glVertex3f(-0.45f,  0.10f,  1.00f);
 
-    //
-    // BOTTOM
-    //
+    // Bottom
 
-    glVertex3f(-0.6f, -0.15f, -0.45f);
-    glVertex3f( 0.6f, -0.15f, -0.45f);
-    glVertex3f( 0.6f, -0.15f,  0.45f);
-    glVertex3f(-0.6f, -0.15f,  0.45f);
-
-    //
-    // FRONT
-    //
-
-    glVertex3f(-0.6f, -0.15f, 0.45f);
-    glVertex3f(-0.6f,  0.15f, 0.45f);
-    glVertex3f( 0.6f,  0.15f, 0.45f);
-    glVertex3f( 0.6f, -0.15f, 0.45f);
-
-    //
-    // BACK
-    //
-
-    glVertex3f(-0.6f, -0.15f, -0.45f);
-    glVertex3f(-0.6f,  0.15f, -0.45f);
-    glVertex3f( 0.6f,  0.15f, -0.45f);
-    glVertex3f( 0.6f, -0.15f, -0.45f);
-
-    //
-    // LEFT
-    //
-
-    glVertex3f(-0.6f, -0.15f, -0.45f);
-    glVertex3f(-0.6f,  0.15f, -0.45f);
-    glVertex3f(-0.6f,  0.15f,  0.45f);
-    glVertex3f(-0.6f, -0.15f,  0.45f);
-
-    //
-    // RIGHT
-    //
-
-    glVertex3f(0.6f, -0.15f, -0.45f);
-    glVertex3f(0.6f,  0.15f, -0.45f);
-    glVertex3f(0.6f,  0.15f,  0.45f);
-    glVertex3f(0.6f, -0.15f,  0.45f);
+    glVertex3f(-0.45f, -0.10f, -1.40f);
+    glVertex3f( 0.45f, -0.10f, -1.40f);
+    glVertex3f( 0.45f, -0.10f,  1.00f);
+    glVertex3f(-0.45f, -0.10f,  1.00f);
 
     glEnd();
 
     //
-    // ====================================
-    // RED BOW ARROW
-    // ON TOP OF BOX
-    // POINTING AWAY
-    // ====================================
+    // BOW SECTION
+    //
+
+    glColor3f(
+        0.28f,
+        0.28f,
+        0.30f
+    );
+
+    glBegin(GL_TRIANGLES);
+
+    glVertex3f(0.0f,  0.10f, -2.00f);
+    glVertex3f(-0.45f, 0.10f, -1.40f);
+    glVertex3f(0.45f,  0.10f, -1.40f);
+
+    glVertex3f(0.0f, -0.10f, -2.00f);
+    glVertex3f(-0.45f,-0.10f, -1.40f);
+    glVertex3f(0.45f, -0.10f, -1.40f);
+
+    glEnd();
+
+    //
+    // CENTERLINE
     //
 
     glLineWidth(4.0f);
 
     glColor3f(
         1.0f,
-        0.0f,
-        0.0f
+        0.23f,
+        0.18f
     );
 
     glBegin(GL_LINES);
 
-    //
-    // MAIN SHAFT
-    //
-
     glVertex3f(
         0.0f,
-        0.20f,
-        0.0f
+        0.16f,
+        0.9f
     );
 
     glVertex3f(
         0.0f,
-        0.20f,
-       -0.85f
-    );
-
-    //
-    // LEFT HEAD
-    //
-
-    glVertex3f(
-        0.0f,
-        0.20f,
-       -0.85f
-    );
-
-    glVertex3f(
-       -0.10f,
-        0.20f,
-       -0.68f
-    );
-
-    //
-    // RIGHT HEAD
-    //
-
-    glVertex3f(
-        0.0f,
-        0.20f,
-       -0.85f
-    );
-
-    glVertex3f(
-        0.10f,
-        0.20f,
-       -0.68f
+        0.16f,
+       -1.9f
     );
 
     glEnd();
 
     //
-    // END IMU
+    // BOW MARKER
     //
+
+    glPointSize(10.0f);
+
+    glColor3f(
+        1.0f,
+        0.23f,
+        0.18f
+    );
+
+    glBegin(GL_POINTS);
+
+    glVertex3f(
+        0.0f,
+        0.18f,
+       -2.0f
+    );
+
+    glEnd();
 
     glPopMatrix();
-
-    //
-    // CONTINUOUS UPDATE
-    //
-
-    update();
 }
