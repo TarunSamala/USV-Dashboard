@@ -184,15 +184,6 @@ PanelFrame {
             }
         }
 
-        //
-        // OPERATIONS PANEL
-        //
-
-        OperationsPanel {
-
-            Layout.fillWidth: true
-
-            Layout.fillHeight: true
-        }
+        
     }
 }

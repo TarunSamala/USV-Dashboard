@@ -146,8 +146,6 @@ qt_add_qml_module(app
 
         qml/Dashboard/components/TelemetryValue.qml
 
-        qml/Dashboard/components/CompassWidget.qml
-
         qml/Dashboard/components/SensorCell.qml
 
         qml/Dashboard/components/StatusIndicator.qml

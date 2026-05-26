@@ -1,6 +1,11 @@
+
 #pragma once
 
 #include <QObject>
+
+#include <QString>
+
+#include <QTimer>
 
 class CalibrationController
     : public QObject
@@ -31,6 +36,24 @@ class CalibrationController
         NOTIFY progressChanged
     )
 
+    Q_PROPERTY(
+        bool success
+        READ success
+        NOTIFY successChanged
+    )
+
+    Q_PROPERTY(
+        QString warning
+        READ warning
+        NOTIFY warningChanged
+    )
+
+    Q_PROPERTY(
+        QString error
+        READ error
+        NOTIFY errorChanged
+    )
+
 public:
 
     explicit CalibrationController(
@@ -48,6 +71,12 @@ public:
     QString instruction() const;
 
     int progress() const;
+
+    bool success() const;
+
+    QString warning() const;
+
+    QString error() const;
 
     //
     // SERIAL EVENT PROCESSOR
@@ -67,6 +96,18 @@ signals:
 
     void progressChanged();
 
+    void successChanged();
+
+    void warningChanged();
+
+    void errorChanged();
+
+    //
+    // CALIBRATION FINISHED
+    //
+
+    void calibrationFinished();
+
 private:
 
     bool m_active = false;
@@ -78,4 +119,17 @@ private:
         "Waiting for operation";
 
     int m_progress = 0;
+
+    bool m_success = false;
+
+    QString m_warning;
+
+    QString m_error;
+
+    //
+    // MAG TIMER
+    //
+
+    QTimer m_magTimer;
 };
+

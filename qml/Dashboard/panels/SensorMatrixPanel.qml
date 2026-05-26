@@ -34,7 +34,7 @@ PanelFrame {
 
             Text {
 
-                text: "ACCELEROMETER"
+                text: "ACCELEROMETER - m/s²"
 
                 color: Theme.textPrimary
 
@@ -56,21 +56,18 @@ PanelFrame {
                 SensorCell {
                     title: "AX"
                     value: telemetry.accelX.toFixed(2)
-                    unit: "m/s²"
                     valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "AY"
                     value: telemetry.accelY.toFixed(2)
-                    unit: "m/s²"
                     valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "AZ"
                     value: telemetry.accelZ.toFixed(2)
-                    unit: "m/s²"
                     valueColor: Theme.textPrimary
                 }
             }
@@ -88,7 +85,7 @@ PanelFrame {
 
             Text {
 
-                text: "GYROSCOPE"
+                text: "GYROSCOPE - rad/s"
 
                 color: Theme.textPrimary
 
@@ -110,21 +107,18 @@ PanelFrame {
                 SensorCell {
                     title: "GX"
                     value: telemetry.gyroX.toFixed(2)
-                    unit: "rad/s"
                     valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "GY"
                     value: telemetry.gyroY.toFixed(2)
-                    unit: "rad/s"
                     valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "GZ"
                     value: telemetry.gyroZ.toFixed(2)
-                    unit: "rad/s"
                     valueColor: Theme.textPrimary
                 }
             }
@@ -142,7 +136,7 @@ PanelFrame {
 
             Text {
 
-                text: "MAGNETOMETER"
+                text: "MAGNETOMETER - µT"
 
                 color: Theme.textPrimary
 
@@ -164,21 +158,18 @@ PanelFrame {
                 SensorCell {
                     title: "MX"
                     value: telemetry.magX.toFixed(1)
-                    unit: "µT"
                     valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "MY"
                     value: telemetry.magY.toFixed(1)
-                    unit: "µT"
                     valueColor: Theme.textPrimary
                 }
 
                 SensorCell {
                     title: "MZ"
                     value: telemetry.magZ.toFixed(1)
-                    unit: "µT"
                     valueColor: Theme.textPrimary
                 }
             }

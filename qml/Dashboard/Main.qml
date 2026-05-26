@@ -24,7 +24,7 @@ ApplicationWindow {
         spacing: 10
 
         //
-        // TOP CONTROL BAR
+        // TOP BAR
         //
 
         TopControlBar {
@@ -35,7 +35,7 @@ ApplicationWindow {
         }
 
         //
-        // MAIN DASHBOARD AREA
+        // MAIN DASHBOARD
         //
 
         RowLayout {
@@ -47,10 +47,12 @@ ApplicationWindow {
             spacing: 10
 
             //
+            // ====================================
             // LEFT COLUMN
+            // ====================================
             //
 
-            OrientationPanel {
+            ColumnLayout {
 
                 Layout.preferredWidth: 280
 
@@ -59,10 +61,38 @@ ApplicationWindow {
                 Layout.maximumWidth: 300
 
                 Layout.fillHeight: true
+
+                spacing: 10
+
+                //
+                // ORIENTATION
+                //
+
+                OrientationPanel {
+
+                    Layout.fillWidth: true
+
+                    Layout.preferredHeight: 410
+
+                    Layout.maximumHeight: 410
+                }
+
+                //
+                // SENSOR MATRIX
+                //
+
+                SensorMatrixPanel {
+
+                    Layout.fillWidth: true
+
+                    Layout.fillHeight: true
+                }
             }
 
             //
+            // ====================================
             // CENTER COLUMN
+            // ====================================
             //
 
             ColumnLayout {
@@ -76,7 +106,7 @@ ApplicationWindow {
                 spacing: 10
 
                 //
-                // 3D VISUALIZATION PANEL
+                // 3D VISUALIZATION
                 //
 
                 VisualizationPanel {
@@ -87,8 +117,9 @@ ApplicationWindow {
 
                     Layout.verticalStretchFactor: 5
                 }
+
                 //
-                // EVENT LOGGER PANEL
+                // EVENT LOGGER
                 //
 
                 PanelFrame {
@@ -114,7 +145,7 @@ ApplicationWindow {
                         spacing: 10
 
                         //
-                        // HEADER ROW
+                        // HEADER
                         //
 
                         RowLayout {
@@ -128,6 +159,10 @@ ApplicationWindow {
                             Item {
                                 Layout.fillWidth: true
                             }
+
+                            //
+                            // CSV BUTTON
+                            //
 
                             Button {
 
@@ -158,15 +193,22 @@ ApplicationWindow {
 
                                     font.family: "monospace"
 
-                                    horizontalAlignment: Text.AlignHCenter
+                                    horizontalAlignment:
+                                        Text.AlignHCenter
 
-                                    verticalAlignment: Text.AlignVCenter
+                                    verticalAlignment:
+                                        Text.AlignVCenter
                                 }
                             }
-                            
+
+                            //
+                            // REC BUTTON
+                            //
+
                             Button {
 
-                                text: csvLogger.logging
+                                text:
+                                    csvLogger.logging
                                     ? "STOP"
                                     : "REC"
 
@@ -190,13 +232,15 @@ ApplicationWindow {
 
                                     radius: 6
 
-                                    color: csvLogger.logging
+                                    color:
+                                        csvLogger.logging
                                         ? "#220000"
                                         : Theme.panelElevated
 
-                                    border.color: csvLogger.logging
-                                                ? "#ff3b3b"
-                                                : Theme.border
+                                    border.color:
+                                        csvLogger.logging
+                                        ? "#ff3b3b"
+                                        : Theme.border
 
                                     border.width: 1
                                 }
@@ -205,19 +249,23 @@ ApplicationWindow {
 
                                     text: parent.text
 
-                                    color: csvLogger.logging
+                                    color:
+                                        csvLogger.logging
                                         ? "#ff4d4d"
                                         : Theme.textPrimary
 
                                     font.pixelSize: 12
 
-                                    font.bold: csvLogger.logging
+                                    font.bold:
+                                        csvLogger.logging
 
                                     font.family: "monospace"
 
-                                    horizontalAlignment: Text.AlignHCenter
+                                    horizontalAlignment:
+                                        Text.AlignHCenter
 
-                                    verticalAlignment: Text.AlignVCenter
+                                    verticalAlignment:
+                                        Text.AlignVCenter
                                 }
                             }
                         }
@@ -263,7 +311,8 @@ ApplicationWindow {
                                     font.family: "monospace"
                                 }
 
-                                ScrollBar.vertical: ScrollBar { }
+                                ScrollBar.vertical:
+                                    ScrollBar { }
                             }
                         }
                     }
@@ -271,7 +320,9 @@ ApplicationWindow {
             }
 
             //
+            // ====================================
             // RIGHT COLUMN
+            // ====================================
             //
 
             ColumnLayout {
@@ -289,36 +340,28 @@ ApplicationWindow {
                 spacing: 10
 
                 //
-                // WATCHDOG PANEL
+                // CALIBRATION
                 //
 
                 WatchdogPanel {
 
                     Layout.fillWidth: true
 
-                    Layout.fillHeight: true
+                    Layout.preferredHeight: 140
 
-                    Layout.preferredHeight: 320
-
-                    Layout.minimumHeight: 300
-
-                    Layout.maximumHeight: 340
+                    Layout.maximumHeight: 140
                 }
 
                 //
-                // SENSOR MATRIX
+                // ACTIVE OPERATIONS
                 //
 
-                SensorMatrixPanel {
+                OperationsPanel {
 
                     Layout.fillWidth: true
 
                     Layout.fillHeight: true
-
-                    Layout.verticalStretchFactor: 3
                 }
-
-                
             }
         }
     }

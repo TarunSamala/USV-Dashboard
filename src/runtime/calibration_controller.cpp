@@ -1,3 +1,4 @@
+
 #include "calibration_controller.h"
 
 CalibrationController::CalibrationController(
@@ -5,6 +6,34 @@ CalibrationController::CalibrationController(
 )
     : QObject(parent)
 {
+    //
+    // MAG TIMER
+    //
+
+    connect(
+        &m_magTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            if (!m_active)
+            {
+                m_magTimer.stop();
+                return;
+            }
+
+            //
+            // SMOOTH MAG PROGRESS
+            //
+
+            if (m_progress < 15)
+            {
+                m_progress += 2;
+
+                emit progressChanged();
+            }
+        }
+    );
 }
 
 bool CalibrationController::active() const
@@ -27,12 +56,49 @@ int CalibrationController::progress() const
     return m_progress;
 }
 
+bool CalibrationController::success() const
+{
+    return m_success;
+}
+
+QString CalibrationController::warning() const
+{
+    return m_warning;
+}
+
+QString CalibrationController::error() const
+{
+    return m_error;
+}
+
 void CalibrationController::processLine(
     const QString& line
 )
 {
     //
+    // RESET STATUS
+    //
+
+    auto resetStatus =
+        [this]()
+    {
+        m_success = false;
+
+        m_warning.clear();
+
+        m_error.clear();
+
+        emit successChanged();
+
+        emit warningChanged();
+
+        emit errorChanged();
+    };
+
+    //
+    // =========================================
     // GYRO START
+    // =========================================
     //
 
     if (
@@ -41,22 +107,33 @@ void CalibrationController::processLine(
         )
     )
     {
+        resetStatus();
+
         m_active = true;
 
         m_title =
             "CALIBRATING GYRO";
 
+        m_instruction =
+            "Keep module flat and still";
+
         m_progress = 0;
 
         emit activeChanged();
+
         emit titleChanged();
+
+        emit instructionChanged();
+
         emit progressChanged();
 
         return;
     }
 
     //
+    // =========================================
     // MAG START
+    // =========================================
     //
 
     if (
@@ -65,22 +142,39 @@ void CalibrationController::processLine(
         )
     )
     {
+        resetStatus();
+
         m_active = true;
 
         m_title =
             "CALIBRATING MAG";
 
+        m_instruction =
+            "Rotate module slowly in all directions";
+
         m_progress = 0;
 
+        //
+        // START TIMER
+        //
+
+        m_magTimer.start(300);
+
         emit activeChanged();
+
         emit titleChanged();
+
+        emit instructionChanged();
+
         emit progressChanged();
 
         return;
     }
 
     //
+    // =========================================
     // BOW START
+    // =========================================
     //
 
     if (
@@ -89,22 +183,33 @@ void CalibrationController::processLine(
         )
     )
     {
+        resetStatus();
+
         m_active = true;
 
         m_title =
             "SETTING BOW";
 
+        m_instruction =
+            "Point module toward vessel bow";
+
         m_progress = 0;
 
         emit activeChanged();
+
         emit titleChanged();
+
+        emit instructionChanged();
+
         emit progressChanged();
 
         return;
     }
 
     //
+    // =========================================
     // INFO
+    // =========================================
     //
 
     if (
@@ -126,24 +231,22 @@ void CalibrationController::processLine(
     }
 
     //
-    // PROGRESS
+    // =========================================
+    // GYRO PROGRESS ONLY
+    // =========================================
     //
 
     if (
-        line.contains(":PROG:")
+        line.startsWith(
+            "CAL:GYRO:PROG:"
+        )
     )
     {
         QString value =
             line.section(
-                ":PROG:",
-                1,
+                "CAL:GYRO:PROG:",
                 1
             );
-
-        //
-        // HANDLE:
-        // CAL:MAG:PROG:52,MX:...
-        //
 
         value =
             value.section(
@@ -161,7 +264,29 @@ void CalibrationController::processLine(
     }
 
     //
+    // =========================================
+    // WARNINGS
+    // =========================================
+    //
+
+    if (
+        line.contains(
+            "insufficient_rotation"
+        )
+    )
+    {
+        m_warning =
+            "Rotate module more widely";
+
+        emit warningChanged();
+
+        return;
+    }
+
+    //
+    // =========================================
     // DONE
+    // =========================================
     //
 
     if (
@@ -170,6 +295,12 @@ void CalibrationController::processLine(
         line.startsWith("BOW:OK")
     )
     {
+        //
+        // STOP TIMER
+        //
+
+        m_magTimer.stop();
+
         m_progress = 100;
 
         emit progressChanged();
@@ -179,23 +310,47 @@ void CalibrationController::processLine(
 
         emit instructionChanged();
 
+        m_success = true;
+
+        emit successChanged();
+
         m_active = false;
 
         emit activeChanged();
+
+        emit calibrationFinished();
 
         return;
     }
 
     //
+    // =========================================
     // ERROR
+    // =========================================
     //
 
     if (
         line.contains(":ERR:")
     )
     {
+        //
+        // STOP TIMER
+        //
+
+        m_magTimer.stop();
+
+        QString err =
+            line.section(
+                ":ERR:",
+                1
+            );
+
+        m_error = err;
+
+        emit errorChanged();
+
         m_instruction =
-            line;
+            "Operation failed";
 
         emit instructionChanged();
 
@@ -206,3 +361,4 @@ void CalibrationController::processLine(
         return;
     }
 }
+
