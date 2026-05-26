@@ -1,19 +1,9 @@
 #include "VesselItem.h"
-
 #include "VesselRenderer.h"
 
-#include <QMouseEvent>
-
-VesselItem::VesselItem(
-    QQuickItem* parent
-)
+VesselItem::VesselItem(QQuickItem* parent)
     : QQuickFramebufferObject(parent)
 {
-    setAcceptedMouseButtons(
-        Qt::AllButtons
-    );
-
-    setAcceptHoverEvents(true);
 }
 
 QQuickFramebufferObject::Renderer*
@@ -71,60 +61,6 @@ void VesselItem::setYaw(float value)
     m_yaw = value;
 
     emit yawChanged();
-
-    update();
-}
-
-void VesselItem::mousePressEvent(
-    QMouseEvent* event
-)
-{
-    m_lastMousePos =
-        event->position();
-}
-
-void VesselItem::mouseMoveEvent(
-    QMouseEvent* event
-)
-{
-    QPointF delta =
-        event->position()
-        - m_lastMousePos;
-
-    //
-    // FULL 360 CAMERA
-    //
-
-    cameraYaw +=
-        delta.x() * 0.6f;
-
-    cameraPitch +=
-        delta.y() * 0.6f;
-
-    //
-    // NO PITCH CLAMP
-    // TRUE SPHERICAL CAMERA
-    //
-
-    m_lastMousePos =
-        event->position();
-
-    update();
-}
-
-void VesselItem::wheelEvent(
-    QWheelEvent* event
-)
-{
-    cameraDistance -=
-        event->angleDelta().y()
-        * 0.002f;
-
-    if (cameraDistance < 2.0f)
-        cameraDistance = 2.0f;
-
-    if (cameraDistance > 20.0f)
-        cameraDistance = 20.0f;
 
     update();
 }
