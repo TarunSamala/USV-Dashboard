@@ -12,54 +12,43 @@ PanelFrame {
 
         anchors.margins: 14
 
-        spacing: 18
+        spacing: 14
 
         //
         // TITLE
         //
 
         SectionTitle {
-            title: "SYSTEM OPERATIONS"
+            title: "CALIBRATION"
         }
 
         //
-        // CONTROLS
+        // CALIBRATION LABEL
         //
 
-        Text {
+        //
+        // BUTTON ROW
+        //
 
-            text: "CONTROL ACTIONS"
-
-            color: Theme.textMuted
-
-            font.pixelSize: 11
-
-            font.letterSpacing: 2
-
-            font.family: "monospace"
-        }
-
-        GridLayout {
+        RowLayout {
 
             Layout.fillWidth: true
 
-            columns: 1
-
-            rowSpacing: 12
-
-            columnSpacing: 10
+            spacing: 10
 
             //
-            // CAL GYRO
+            // GYRO
             //
 
             Button {
 
-                text: "CAL GYRO"
+                text: "GYR"
 
                 Layout.fillWidth: true
 
-                implicitHeight: 44
+                implicitWidth: 72
+
+                implicitHeight: 52
 
                 enabled:
                     !calibrationController.active
@@ -107,16 +96,18 @@ PanelFrame {
             }
 
             //
-            // CAL MAG
+            // MAG
             //
 
             Button {
 
-                text: "CAL MAG"
+                text: "MAG"
 
                 Layout.fillWidth: true
 
-                implicitHeight: 44
+                implicitWidth: 72
+
+                implicitHeight: 52
 
                 enabled:
                     !calibrationController.active
@@ -164,16 +155,18 @@ PanelFrame {
             }
 
             //
-            // SET BOW
+            // BOW
             //
 
             Button {
 
-                text: "SET BOW"
+                text: "BOW"
 
                 Layout.fillWidth: true
 
-                implicitHeight: 44
+                implicitWidth: 72
+
+                implicitHeight: 52
 
                 enabled:
                     !calibrationController.active
@@ -214,6 +207,120 @@ PanelFrame {
                     verticalAlignment:
                         Text.AlignVCenter
                 }
+            }
+        }
+
+        //
+        // STATUS INDICATOR
+        //
+
+        RowLayout {
+
+            Layout.fillWidth: true
+
+            spacing: 10
+
+            //
+            // STATUS DOT
+            //
+
+            Rectangle {
+
+                width: 10
+
+                height: 10
+
+                radius: 5
+
+                color:
+
+                    calibrationController.error !== ""
+                    ? "#ff4444"
+
+                    :
+
+                    calibrationController.warning !== ""
+                    ? "#ffaa00"
+
+                    :
+
+                    calibrationController.success
+                    ? "#00cc66"
+
+                    :
+
+                    calibrationController.active
+                    ? "#33aaff"
+
+                    :
+
+                    "#666666"
+            }
+
+            //
+            // STATUS TEXT
+            //
+
+            Text {
+
+                Layout.fillWidth: true
+
+                text:
+
+                    calibrationController.error !== ""
+                    ? "Calibration failed"
+
+                    :
+
+                    calibrationController.warning !== ""
+                    ? "Completed with warnings"
+
+                    :
+
+                    calibrationController.success
+                    ? "Task executed successfully"
+
+                    :
+
+                    calibrationController.active
+                    ? calibrationController.title
+
+                    :
+
+                    "Idle"
+
+                color:
+
+                    calibrationController.error !== ""
+                    ? "#ff5555"
+
+                    :
+
+                    calibrationController.warning !== ""
+                    ? "#ffcc33"
+
+                    :
+
+                    calibrationController.success
+                    ? "#33dd88"
+
+                    :
+
+                    calibrationController.active
+                    ? "#33aaff"
+
+                    :
+
+                    Theme.textMuted
+
+                font.pixelSize: 11
+
+                font.bold:
+                    calibrationController.active
+
+                font.family: "monospace"
+
+                wrapMode: Text.WordWrap
             }
         }
 

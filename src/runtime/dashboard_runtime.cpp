@@ -1,3 +1,4 @@
+
 #include "dashboard_runtime.h"
 
 #include <QDebug>
@@ -24,7 +25,12 @@ DashboardRuntime::DashboardRuntime(
         &DashboardRuntime::refreshPorts
     );
 
-    m_portScanTimer.start(1000);
+    //
+    // SLOWER SCAN
+    // REDUCES USB INSTABILITY
+    //
+
+    m_portScanTimer.start(2500);
 }
 
 bool DashboardRuntime::connected() const
@@ -105,42 +111,70 @@ void DashboardRuntime::setCurrentPort(
 
 void DashboardRuntime::refreshPorts()
 {
-    m_availablePorts.clear();
+    //
+    // VERY IMPORTANT
+    // DO NOT RESCAN
+    // WHILE CONNECTED
+    //
+
+    if (connected())
+    {
+        return;
+    }
+
+    QStringList detectedPorts;
 
     const auto ports =
         QSerialPortInfo::availablePorts();
 
     for (const auto& port : ports)
     {
-        const QString location =
-            port.systemLocation();
-
-        const bool validLinuxPort =
-
-            location.contains("ttyACM")
-            ||
-
-            location.contains("ttyUSB");
-
 #ifdef Q_OS_WIN
 
-        const bool validWindowsPort =
-            location.startsWith("COM");
+        //
+        // WINDOWS
+        //
 
-#else
-
-        const bool validWindowsPort =
-            false;
-
-#endif
+        const QString portName =
+            port.portName();
 
         if (
-            validLinuxPort
-            || validWindowsPort
+            portName.startsWith("COM")
         )
         {
             if (
-                !m_availablePorts.contains(
+                !detectedPorts.contains(
+                    portName
+                )
+            )
+            {
+                qDebug()
+                    << "Detected serial:"
+                    << portName;
+
+                detectedPorts.append(
+                    portName
+                );
+            }
+        }
+
+#else
+
+        //
+        // LINUX
+        //
+
+        const QString location =
+            port.systemLocation();
+
+        if (
+            location.contains("ttyACM")
+            ||
+            location.contains("ttyUSB")
+        )
+        {
+            if (
+                !detectedPorts.contains(
                     location
                 )
             )
@@ -149,11 +183,25 @@ void DashboardRuntime::refreshPorts()
                     << "Detected serial:"
                     << location;
 
-                m_availablePorts.append(
+                detectedPorts.append(
                     location
                 );
             }
         }
+
+#endif
+    }
+
+    //
+    // UPDATE ONLY IF CHANGED
+    //
+
+    if (m_availablePorts != detectedPorts)
+    {
+        m_availablePorts =
+            detectedPorts;
+
+        emit portsChanged();
     }
 
     //
@@ -164,9 +212,10 @@ void DashboardRuntime::refreshPorts()
     {
         if (
             m_currentPort.isEmpty()
-            || !m_availablePorts.contains(
-                   m_currentPort
-               )
+            ||
+            !m_availablePorts.contains(
+                m_currentPort
+            )
         )
         {
             m_currentPort =
@@ -184,8 +233,6 @@ void DashboardRuntime::refreshPorts()
             emit currentPortChanged();
         }
     }
-
-    emit portsChanged();
 }
 
 void DashboardRuntime::setConnected(

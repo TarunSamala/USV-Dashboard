@@ -1,8 +1,9 @@
+
 #include "serial_reader.h"
 
 #include <QDebug>
 
-#include <QThread>
+#include <QTimer>
 
 SerialReader::SerialReader(QObject* parent)
     : QObject(parent)
@@ -20,8 +21,13 @@ SerialReader::SerialReader(QObject* parent)
         this,
         [this](QSerialPort::SerialPortError error)
         {
-            if (error == QSerialPort::NoError)
+            if (
+                error ==
+                QSerialPort::NoError
+            )
+            {
                 return;
+            }
 
             emit serialError(
                 m_serial.errorString()
@@ -35,7 +41,7 @@ void SerialReader::start(
 )
 {
     //
-    // Safety check
+    // VALIDATION
     //
 
     if (portName.isEmpty())
@@ -48,23 +54,27 @@ void SerialReader::start(
     }
 
     //
-    // Close existing connection
+    // CLOSE OLD PORT
     //
 
     if (m_serial.isOpen())
+    {
         m_serial.close();
+    }
 
     //
-    // Clear old buffered data
+    // CLEAR BUFFER
     //
 
     m_buffer.clear();
 
     //
-    // Configure serial
+    // CONFIGURE SERIAL
     //
 
-    m_serial.setPortName(portName);
+    m_serial.setPortName(
+        portName
+    );
 
     m_serial.setBaudRate(
         QSerialPort::Baud115200
@@ -87,10 +97,27 @@ void SerialReader::start(
     );
 
     //
-    // Open serial
+    // VERY IMPORTANT
+    // PREVENT ESP32 RESET
     //
 
-    if (!m_serial.open(QIODevice::ReadWrite))
+    m_serial.setDataTerminalReady(
+        false
+    );
+
+    m_serial.setRequestToSend(
+        false
+    );
+
+    //
+    // OPEN PORT
+    //
+
+    if (
+        !m_serial.open(
+            QIODevice::ReadWrite
+        )
+    )
     {
         emit serialError(
             "Failed to open serial port: "
@@ -100,26 +127,41 @@ void SerialReader::start(
         return;
     }
 
-    qDebug() << "Serial connected:"
-             << portName;
+    qDebug()
+        << "Serial connected:"
+        << portName;
 
     emit serialConnected();
 
     //
-    // Allow ESP32 USB CDC to stabilize
+    // WAIT FOR STABLE USB CDC
     //
 
-    QThread::msleep(1200);
+    QTimer::singleShot(
+        1500,
+        this,
+        [this]()
+        {
+            if (!m_serial.isOpen())
+                return;
 
-    //
-    // Dashboard handshake
-    //
+            //
+            // ONLY SEND
+            // AFTER STABLE
+            //
 
-    sendLine("CONNECT:DASHBOARD");
+            sendLine(
+                "CONNECT:DASHBOARD"
+            );
 
-    sendLine("START");
+            sendLine(
+                "START"
+            );
 
-    qDebug() << "Handshake sent";
+            qDebug()
+                << "Handshake sent";
+        }
+    );
 }
 
 void SerialReader::stop()
@@ -128,18 +170,19 @@ void SerialReader::stop()
         return;
 
     //
-    // Close serial
+    // CLOSE PORT
     //
 
     m_serial.close();
 
     //
-    // Clear packet buffer
+    // CLEAR BUFFER
     //
 
     m_buffer.clear();
 
-    qDebug() << "Serial disconnected";
+    qDebug()
+        << "Serial disconnected";
 
     emit serialDisconnected();
 }
@@ -148,15 +191,17 @@ void SerialReader::connectPort(
     const QString& portName
 )
 {
-    qDebug() << "Connecting to:"
-             << portName;
+    qDebug()
+        << "Connecting to:"
+        << portName;
 
     start(portName);
 }
 
 void SerialReader::disconnectPort()
 {
-    qDebug() << "Disconnect requested";
+    qDebug()
+        << "Disconnect requested";
 
     stop();
 }
@@ -169,19 +214,22 @@ void SerialReader::sendLine(
         return;
 
     QByteArray data =
-        line.toUtf8() + '\n';
+        line.toUtf8()
+        + '\n';
 
     m_serial.write(data);
 
     m_serial.flush();
 
-    qDebug() << "TX:" << line;
+    qDebug()
+        << "TX:"
+        << line;
 }
 
 void SerialReader::readData()
 {
     //
-    // Append incoming bytes
+    // APPEND BYTES
     //
 
     m_buffer += QString::fromUtf8(
@@ -189,10 +237,12 @@ void SerialReader::readData()
     );
 
     //
-    // Process COMPLETE lines only
+    // COMPLETE LINES ONLY
     //
 
-    while (m_buffer.contains('\n'))
+    while (
+        m_buffer.contains('\n')
+    )
     {
         int newlineIndex =
             m_buffer.indexOf('\n');
@@ -203,7 +253,7 @@ void SerialReader::readData()
             ).trimmed();
 
         //
-        // Remove processed line
+        // REMOVE LINE
         //
 
         m_buffer.remove(
@@ -212,14 +262,17 @@ void SerialReader::readData()
         );
 
         //
-        // Ignore empty lines
+        // IGNORE EMPTY
         //
 
         if (line.isEmpty())
             continue;
 
-        qDebug() << "RX:" << line;
+        qDebug()
+            << "RX:"
+            << line;
 
         emit lineReceived(line);
     }
 }
+

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Dashboard
 
 Rectangle {
@@ -11,9 +12,8 @@ Rectangle {
 
     property string value: "0.00"
 
-    property string unit: "m/s²"
-
-    property color valueColor: Theme.textPrimary
+    property color valueColor:
+        Theme.textPrimary
 
     radius: 8
 
@@ -37,11 +37,11 @@ Rectangle {
 
         anchors.margins: 8
 
-        spacing: 2
+        spacing: 4
 
-       
+        //
         // TITLE
-       
+        //
 
         Text {
 
@@ -53,16 +53,19 @@ Rectangle {
 
             font.letterSpacing: 2
 
-            Layout.alignment: Qt.AlignHCenter
+            font.family: "monospace"
+
+            Layout.alignment:
+                Qt.AlignHCenter
         }
 
         Item {
             Layout.fillHeight: true
         }
 
-       
+        //
         // VALUE
-       
+        //
 
         Text {
 
@@ -76,22 +79,8 @@ Rectangle {
 
             font.family: "monospace"
 
-            Layout.alignment: Qt.AlignHCenter
-        }
-
-       
-        // UNIT
-       
-
-        Text {
-
-            text: root.unit
-
-            color: Theme.textMuted
-
-            font.pixelSize: 9
-
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment:
+                Qt.AlignHCenter
         }
 
         Item {
