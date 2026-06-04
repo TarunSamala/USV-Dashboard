@@ -1,14 +1,8 @@
-
 #pragma once
 
 #include <QObject>
 
-#include <QString>
-
-#include <QTimer>
-
-class CalibrationController
-    : public QObject
+class CalibrationController : public QObject
 {
     Q_OBJECT
 
@@ -60,10 +54,6 @@ public:
         QObject* parent = nullptr
     );
 
-    //
-    // STATE
-    //
-
     bool active() const;
 
     QString title() const;
@@ -77,10 +67,6 @@ public:
     QString warning() const;
 
     QString error() const;
-
-    //
-    // SERIAL EVENT PROCESSOR
-    //
 
     void processLine(
         const QString& line
@@ -102,21 +88,15 @@ signals:
 
     void errorChanged();
 
-    //
-    // CALIBRATION FINISHED
-    //
-
     void calibrationFinished();
 
 private:
 
     bool m_active = false;
 
-    QString m_title =
-        "IDLE";
+    QString m_title;
 
-    QString m_instruction =
-        "Waiting for operation";
+    QString m_instruction;
 
     int m_progress = 0;
 
@@ -126,10 +106,5 @@ private:
 
     QString m_error;
 
-    //
-    // MAG TIMER
-    //
-
     QTimer m_magTimer;
 };
-

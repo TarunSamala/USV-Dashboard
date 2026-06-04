@@ -1,40 +1,14 @@
 
 #include "calibration_controller.h"
+#include <QTimer>
 
 CalibrationController::CalibrationController(
     QObject* parent
 )
     : QObject(parent)
 {
-    //
-    // MAG TIMER
-    //
-
-    connect(
-        &m_magTimer,
-        &QTimer::timeout,
-        this,
-        [this]()
-        {
-            if (!m_active)
-            {
-                m_magTimer.stop();
-                return;
-            }
-
-            //
-            // SMOOTH MAG PROGRESS
-            //
-
-            if (m_progress < 15)
-            {
-                m_progress += 2;
-
-                emit progressChanged();
-            }
-        }
-    );
 }
+
 
 bool CalibrationController::active() const
 {
@@ -158,7 +132,7 @@ void CalibrationController::processLine(
         // START TIMER
         //
 
-        m_magTimer.start(300);
+        //
 
         emit activeChanged();
 
@@ -262,6 +236,38 @@ void CalibrationController::processLine(
 
         return;
     }
+    //
+    // =========================================
+    // MAG PROGRESS
+    // =========================================
+    //
+
+    if (
+        line.startsWith(
+            "CAL:MAG:PROG:"
+        )
+    )
+    {
+        QString value =
+            line.section(
+                "CAL:MAG:PROG:",
+                1
+            );
+
+        value =
+            value.section(
+                ",",
+                0,
+                0
+            );
+
+        m_progress =
+            value.toInt();
+
+        emit progressChanged();
+
+        return;
+    }
 
     //
     // =========================================
@@ -299,7 +305,7 @@ void CalibrationController::processLine(
         // STOP TIMER
         //
 
-        m_magTimer.stop();
+        //
 
         m_progress = 100;
 
@@ -337,7 +343,7 @@ void CalibrationController::processLine(
         // STOP TIMER
         //
 
-        m_magTimer.stop();
+        //
 
         QString err =
             line.section(

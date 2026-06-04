@@ -89,10 +89,18 @@ void VesselRenderer::render()
     glLoadIdentity();
 
     gluLookAt(
-        0.0, 4.5, 8.0,
-        0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0
-    );
+    -6.0,
+     0.0,
+     2.5,
+
+     2.0,
+     0.0,
+     0.0,
+
+     0.0,
+     0.0,
+     1.0
+);
 
     drawGrid();
 
@@ -105,24 +113,6 @@ void VesselRenderer::render()
 
 void VesselRenderer::drawGrid()
 {
-    //
-    // WATER PLANE
-    //
-
-    glColor3f(
-        0.08f,
-        0.08f,
-        0.09f
-    );
-
-    glBegin(GL_QUADS);
-
-    glVertex3f(-100.0f, 0.0f, -100.0f);
-    glVertex3f( 100.0f, 0.0f, -100.0f);
-    glVertex3f( 100.0f, 0.0f,  100.0f);
-    glVertex3f(-100.0f, 0.0f,  100.0f);
-
-    glEnd();
 
     //
     // GRID
@@ -151,44 +141,38 @@ void VesselRenderer::drawGrid()
 
 void VesselRenderer::drawWorldAxes()
 {
-    glLineWidth(2.0f);
+    glLineWidth(3.0f);
 
     glBegin(GL_LINES);
 
-    //
-    // FORWARD
-    //
+    // X FORWARD
 
     glColor3f(
-        0.7f,
-        0.15f,
-        0.15f
+        1.0f,
+        0.23f,
+        0.18f
     );
 
     glVertex3f(0,0,0);
     glVertex3f(3,0,0);
 
-    //
-    // UP
-    //
+    // Y RIGHT
 
     glColor3f(
-        0.75f,
-        0.75f,
-        0.75f
+        0.45f,
+        0.45f,
+        0.45f
     );
 
     glVertex3f(0,0,0);
     glVertex3f(0,3,0);
 
-    //
-    // LATERAL
-    //
+    // Z UP
 
     glColor3f(
-        0.35f,
-        0.35f,
-        0.35f
+        0.85f,
+        0.85f,
+        0.85f
     );
 
     glVertex3f(0,0,0);
@@ -202,32 +186,32 @@ void VesselRenderer::drawVessel()
     glPushMatrix();
 
     //
-    // TELEMETRY ORIENTATION
+    // BODY FRAME
     //
-    // Firmware outputs:
-    // Roll/Pitch/Yaw
-    // through Madgwick fusion.
+    // X = FORWARD
+    // Y = RIGHT
+    // Z = UP
     //
 
     glRotatef(
         m_yaw,
         0.0f,
-        1.0f,
-        0.0f
+        0.0f,
+        1.0f
     );
 
     glRotatef(
         m_pitch,
-        1.0f,
         0.0f,
+        1.0f,
         0.0f
     );
 
     glRotatef(
-        -m_roll,
+       -m_roll,
+        1.0f,
         0.0f,
-        0.0f,
-        1.0f
+        0.0f
     );
 
     //
@@ -242,41 +226,41 @@ void VesselRenderer::drawVessel()
 
     glBegin(GL_QUADS);
 
-    // Deck
+    // TOP
 
-    glVertex3f(-0.45f,  0.10f, -1.40f);
-    glVertex3f( 0.45f,  0.10f, -1.40f);
-    glVertex3f( 0.45f,  0.10f,  1.00f);
-    glVertex3f(-0.45f,  0.10f,  1.00f);
+    glVertex3f(-1.00f,-0.35f, 0.10f);
+    glVertex3f( 1.20f,-0.35f, 0.10f);
+    glVertex3f( 1.20f, 0.35f, 0.10f);
+    glVertex3f(-1.00f, 0.35f, 0.10f);
 
-    // Bottom
+    // BOTTOM
 
-    glVertex3f(-0.45f, -0.10f, -1.40f);
-    glVertex3f( 0.45f, -0.10f, -1.40f);
-    glVertex3f( 0.45f, -0.10f,  1.00f);
-    glVertex3f(-0.45f, -0.10f,  1.00f);
+    glVertex3f(-1.00f,-0.35f,-0.10f);
+    glVertex3f( 1.20f,-0.35f,-0.10f);
+    glVertex3f( 1.20f, 0.35f,-0.10f);
+    glVertex3f(-1.00f, 0.35f,-0.10f);
 
     glEnd();
 
     //
-    // BOW SECTION
+    // BOW
     //
 
     glColor3f(
-        0.28f,
-        0.28f,
-        0.30f
+        0.30f,
+        0.30f,
+        0.32f
     );
 
     glBegin(GL_TRIANGLES);
 
-    glVertex3f(0.0f,  0.10f, -2.00f);
-    glVertex3f(-0.45f, 0.10f, -1.40f);
-    glVertex3f(0.45f,  0.10f, -1.40f);
+    glVertex3f(1.80f,0.0f,0.0f);
+    glVertex3f(1.20f,-0.35f,0.10f);
+    glVertex3f(1.20f, 0.35f,0.10f);
 
-    glVertex3f(0.0f, -0.10f, -2.00f);
-    glVertex3f(-0.45f,-0.10f, -1.40f);
-    glVertex3f(0.45f, -0.10f, -1.40f);
+    glVertex3f(1.80f,0.0f,0.0f);
+    glVertex3f(1.20f,-0.35f,-0.10f);
+    glVertex3f(1.20f, 0.35f,-0.10f);
 
     glEnd();
 
@@ -295,15 +279,15 @@ void VesselRenderer::drawVessel()
     glBegin(GL_LINES);
 
     glVertex3f(
+       -0.80f,
         0.0f,
-        0.16f,
-        0.9f
+        0.15f
     );
 
     glVertex3f(
+        1.75f,
         0.0f,
-        0.16f,
-       -1.9f
+        0.15f
     );
 
     glEnd();
@@ -323,9 +307,9 @@ void VesselRenderer::drawVessel()
     glBegin(GL_POINTS);
 
     glVertex3f(
+        1.80f,
         0.0f,
-        0.18f,
-       -2.0f
+        0.18f
     );
 
     glEnd();
