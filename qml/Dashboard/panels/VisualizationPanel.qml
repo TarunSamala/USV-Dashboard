@@ -33,16 +33,20 @@ PanelFrame {
 
             clip: true
 
-        VesselView {
+            VesselView {
 
-            anchors.fill: parent
+                anchors.fill: parent
 
-            roll: telemetry.roll || 0
+                //
+                // Use display (calibration-offset) values
+                // so CAL BOW immediately resets the vessel
+                // to its reference orientation.
+                //
 
-            pitch: telemetry.pitch || 0
-
-            yaw: telemetry.yaw || 0
-}
+                roll:  telemetry.displayRoll  || 0
+                pitch: telemetry.displayPitch || 0
+                yaw:   telemetry.displayYaw   || 0
+            }
         }
     }
 }

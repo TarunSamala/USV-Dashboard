@@ -3,6 +3,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QQuickWindow>
+#include <QSGRendererInterface>
+
 #include <QTimer>
 
 #include <QDebug>
@@ -26,6 +29,20 @@
 
 int main(int argc, char *argv[])
 {
+    //
+    // FORCE OPENGL BACKEND
+    //
+    // Qt 6 defaults to the platform-native graphics API
+    // (Vulkan on Linux, Metal on macOS, D3D11 on Windows).
+    // VesselRenderer uses QOpenGLFunctions / legacy GLU,
+    // so we must explicitly request OpenGL before the
+    // QApplication is constructed.
+    //
+
+    QQuickWindow::setGraphicsApi(
+        QSGRendererInterface::OpenGL
+    );
+
     QApplication app(argc, argv);
 
     //
