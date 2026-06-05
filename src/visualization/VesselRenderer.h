@@ -28,7 +28,6 @@ private:
     float m_yaw   = 0.0f;
 
     void drawGrid();
-    void drawWorldAxes();
     void drawCubeBounds();
     void drawVessel();
     void drawAxisIndicator(

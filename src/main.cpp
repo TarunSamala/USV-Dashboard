@@ -6,6 +6,8 @@
 #include <QQuickWindow>
 #include <QSGRendererInterface>
 
+#include <QQuickStyle>
+
 #include <QTimer>
 
 #include <QDebug>
@@ -29,6 +31,17 @@
 
 int main(int argc, char *argv[])
 {
+    //
+    // FORCE BASIC QML STYLE
+    //
+    // The Windows native style does not support background/
+    // contentItem customization on Button and ComboBox.
+    // Basic is the cross-platform style that allows full
+    // QML-side customization used throughout this dashboard.
+    //
+
+    QQuickStyle::setStyle("Basic");
+
     //
     // FORCE OPENGL BACKEND
     //
