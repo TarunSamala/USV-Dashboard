@@ -1,6 +1,7 @@
 #pragma once
 
-#include <QObject>
+#include <QObject>  
+#include <QTimer>
 
 class CalibrationController : public QObject
 {

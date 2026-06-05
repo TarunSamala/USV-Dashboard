@@ -29,5 +29,10 @@ private:
 
     void drawGrid();
     void drawWorldAxes();
+    void drawCubeBounds();
     void drawVessel();
+    void drawAxisIndicator(
+        int viewportWidth,
+        int viewportHeight
+    );
 };

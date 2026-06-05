@@ -173,6 +173,20 @@ PanelFrame {
 
                 onClicked: {
 
+                    //
+                    // 1. Immediately reset the 3D visualizer
+                    //    to the default (zero) orientation by
+                    //    capturing the current IMU reading as
+                    //    the new reference offset.
+                    //
+
+                    telemetry.calibrateBow()
+
+                    //
+                    // 2. Inform the firmware so it also saves
+                    //    the bow heading on the ESP32 side.
+                    //
+
                     serialReader.sendLine(
                         "SET:BOW"
                     )
